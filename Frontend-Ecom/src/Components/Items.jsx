@@ -22,12 +22,12 @@ function Items(props) {
   }
   return (
 
-    <div className='w-60 hover:scale-105 transition-all duration-60 mt-4 hover:shadow-lg rounded-2xl relative'>
+    <div className='w-60  mt-4 shadow-lg rounded-2xl overflow-hidden relative'>
     <Link to={`/product/${props._id || props.id}`}>
       {/* Image Container with Label */}
       <div className='relative'>
         <img
-          className='rounded-2xl w-full h-60 object-cover'
+          className='rounded-2xl w-full h-60 object-cover hover:scale-105 transition-transform duration-300'
           alt={props.title}
           src={
             props.image.includes('/')

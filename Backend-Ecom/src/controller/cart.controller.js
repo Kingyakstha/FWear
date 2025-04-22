@@ -8,7 +8,7 @@ import mongoose from "mongoose"
 
 const addToCart= asyncHandler( async (req,res)=>{
     const {productid}= req.params
-    const {quantity}= req.body
+    const {size,quantity}= req.body
 
     if (!productid) {
         throw new ApiError(401, "Product ID is required");
@@ -29,7 +29,7 @@ const addToCart= asyncHandler( async (req,res)=>{
         throw new ApiError(400,"User not found")
     }
     const existedCartItem= await Cart.findOne({
-        $and:[{product:productid},{user:user._id}]
+        $and:[{product:productid},{user:user._id},{size:size}]
     })
 
     console.log("Existed item :",existedCartItem)
@@ -47,6 +47,7 @@ const addToCart= asyncHandler( async (req,res)=>{
     else{
         const cartItem= await Cart.create({
             product: product._id,
+            size,
             quantity,
             user:user._id
         })
@@ -57,10 +58,6 @@ const addToCart= asyncHandler( async (req,res)=>{
             new ApiResponse(200, cartItem,"Product added to cart successfully !!!")
         )
     }
-
-
-  
-
 })
 
 const removeFromCart= asyncHandler( async(req,res)=>{
@@ -137,7 +134,8 @@ const getCartItems= asyncHandler( async(req,res)=>{
                 name:1,
                 price:1,
                 images:1,
-                quantity:1
+                quantity:1,
+                size:1
               }
             }
           ])

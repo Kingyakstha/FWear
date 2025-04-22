@@ -7,6 +7,11 @@ const cartSchema = new Schema(
             ref: "Product"
         },
 
+        size:{
+            type: String,
+            required:true
+        },
+
         quantity:{
             type: Number,
             required: true

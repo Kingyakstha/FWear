@@ -80,7 +80,7 @@ const registerUser= asyncHandler(async(req,res)=>{
             avatar:avatar.url,
             email,
             password,
-            username:username.toLowerCase()
+            username:username?.toLowerCase()
         }) 
     
         console.log("User db :",user)
@@ -123,7 +123,10 @@ const loginUser= asyncHandler ( async (req,res)=>{
 
     const options={ // cookies modifiable only through server
         httpOnly: true,
-        secure: true
+        // secure: true    //for production where https is present 
+        secure: process.env.NODE_ENV === "production", // Use secure in production only
+        sameSite: 'lax' // add this for cross-origin control
+
     }
 
     return res
@@ -151,7 +154,10 @@ const logoutUser= asyncHandler( async (req, res)=>{
 
     const options={ // cookies modifiable only through server
         httpOnly: true,
-        secure: true
+        // secure: true    //for production where https is present 
+        secure: process.env.NODE_ENV === "production" ,// Use secure in production only
+        sameSite: 'lax' // add this for cross-origin control
+
     }
 
     return res
@@ -189,7 +195,10 @@ const refreshAccessToken= asyncHandler( async (req,res)=>{
  
      const options={ // cookies modifiable only through server
          httpOnly: true,
-         secure: true
+        // secure: true    //for production where https is present 
+        secure: process.env.NODE_ENV === "production", // Use secure in production only
+        sameSite: 'lax' // add this for cross-origin control
+
      }
      const {accessToken,newRefreshToken}=await generateAccessAndRefreshTokens(user._id)
  

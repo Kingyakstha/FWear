@@ -8,6 +8,7 @@ import { FiStar } from 'react-icons/fi'
 import { RiCheckboxBlankCircleFill } from "react-icons/ri";
 import { AiFillLike } from "react-icons/ai";
 import { FaStar } from "react-icons/fa6";
+import axios from 'axios'
 
 
 
@@ -21,35 +22,43 @@ function ProductDisplay(props) {
   const [size,setSize]=useState('')
 
   let item={
-    id:toString(product._id),
-    name:product.productname,
-    category:product.category,
-    size,
+    // id:toString(product._id),
+    name:product.productname, 
     price:product.price,
+    quantity:quantity==0?1:quantity,
+    size,
     image:product.image.image[0],
-    quantity:quantity==0?1:quantity
+    // id:toString(product._id),
+    // name:product.productname, 
+    // category:product.category,
+    // size,
+    // price:product.price,
+    // image:product.image.image[0],
+    // quantity:quantity==0?1:quantity
   }
 
   const addCart=async()=>{
-    const user=await authService.getCurrentUser()
+    const user=await axios.get("http://localhost:8000/api/v1/users/get-currentuser",{
+      withCredentials: true
+    })
+
+    // const user=await authService.getCurrentUser()
     if(!user){
       console.log('User not found')
     }
     else{
     dispatch(addToCart(item))
+
     let cartItem={}
-    cartItem.Name=item.name
-    cartItem.Image=item.image
-    cartItem.Quantity=item.quantity
-    cartItem.Price=item.price
-    cartItem.UserId= "randomId"
-    cartItem.UserId= user.$id
-    cartItem.ProductId=toString(item.id)
-    cartItem.Description='random101'
-    cartItem.Size=size
-    console.log('hello',item)
-    await dbService.addToCart(cartItem)
-    console.log('cartItem',cartItem)
+    // cartItem.product=product._id
+    cartItem.size=item.size
+    cartItem.quantity=item.quantity
+    // cartItem.user=user.data._id
+    console.log('Cart Item is :',cartItem)
+    const response= await axios.post(`http://localhost:8000/api/v1/carts/add-cart/${product._id}`,cartItem,{
+      withCredentials: true
+    })
+    console.log('The response is ',response)
  }
   }
 
@@ -139,12 +148,12 @@ function ProductDisplay(props) {
 
         </ul>
         <div className='flex items-end gap-4'>
-          <div className='flex items-center gap-2 select-none'>
-            <p onClick={()=>{if (quantity>0) setQuantity(quantity-1)}} className='bg-red-400 w-6 h-12 text-center py-3'>-</p>
+          <div className='flex items-center justify-center gap-2 select-none'>
+            <p onClick={()=>{if (quantity>0) setQuantity(quantity-1)}} className='bg-red-500 size-8 rounded-full pt-1 text-center cursor-pointer'>-</p>
             <p className='h-12 w-6 text-center pt-3'>{quantity}</p>
-            <p onClick={()=>{if (quantity < 15 )setQuantity(quantity+1)} }className='bg-red-400 w-6 h-12 text-center py-3'>+</p>
+            <p onClick={()=>{if (quantity < 15 )setQuantity(quantity+1)} }className='bg-red-500 size-8 rounded-full pt-1 text-center cursor-pointer'>+</p>
           </div>
-          <button onClick={()=>addCart()} className='mt-5 bg-red-500 place-content-center px-10 py-3 text-white cursor-pointer'>ADD TO CART</button>
+          <button onClick={()=>addCart()} className='mt-5 bg-red-500 place-content-center px-10 py-3 rounded-xl text-white cursor-pointer'>ADD TO CART</button>
         </div>
 
         <div className='mt-10 mb-2 font-poppins'>

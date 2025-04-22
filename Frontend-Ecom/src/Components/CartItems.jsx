@@ -4,21 +4,23 @@ import Input from './Input';
 import dbService from '../appwrite/config';
 import { removeFromCart } from '../Context/shopSlice';
 import { useDispatch } from 'react-redux';
+import axios from 'axios';
 
 function CartItems() {
   const dispatch=useDispatch()
   const [all_item, setAllItem] = useState([]);
   const [subtotal, setSubtotal] = useState(0);
 
-  const removeItem = async (id,productId) => {
+  const removeItem = async (id,productname,size) => {
     try {
       console.log('Removing item with ID:', id);
-      const item = await dbService.deleteCartItem(id);
+      const item= await axios.post(`http://localhost:8000/api/v1/carts/remove-cart/${id}`)
       if (item) {
         console.log('Item successfully deleted'); 
-        dispatch(removeFromCart(productId))
+        dispatch(removeFromCart(productname,size))
+        
         // Update the local state to remove the deleted item
-        setAllItem((prevItems) => prevItems.filter((item) => item.$id !== id));
+        setAllItem((prevItems) => prevItems.filter((item) => item._id !== id));
       }
     } catch (error) {
       console.error('Error deleting item:', error);
@@ -28,10 +30,13 @@ function CartItems() {
   useEffect(() => {
     const fetchCartItems = async () => {
       try {
-        const posts = await dbService.getCartItem();
-        if (posts) {
-          console.log('Fetched cart items:', posts.documents);
-          setAllItem(posts.documents);
+        // const posts = await dbService.getCartItem();
+        const cartItems= await axios.get("http://localhost:8000/api/v1/carts/get-cartitem",{
+          withCredentials: true
+        })
+        if (cartItems) {
+          console.log('Fetched cart items:', cartItems.data.data[0].images[0].imageurl);
+          setAllItem(cartItems.data.data);
         }
       } catch (error) {
         console.error('Error fetching cart items:', error);
@@ -45,7 +50,7 @@ function CartItems() {
     // Calculate subtotal whenever `all_item` changes
     const calculateSubtotal = () => {
       const total = all_item.reduce(
-        (acc, item) => acc + Number(item.Price) * Number(item.Quantity),
+        (acc, item) => acc + Number(item.price) * Number(item.quantity),
         0
       );
       setSubtotal(total);
@@ -54,7 +59,7 @@ function CartItems() {
     calculateSubtotal();
   }, [all_item]);
 
-  console.log(all_item)
+  console.log("all the items are",all_item)
   return (
     <div className="w-screen mt-14">
       <div key={nanoid()} className="w-4/5 justify-self-center">
@@ -71,26 +76,26 @@ function CartItems() {
         <hr />
 
         {all_item.length > 0 &&
-          all_item.map((items) => (
-            <React.Fragment key={items.$id}>
+          all_item.map((items,id) => (
+            <React.Fragment key={id}>
               <div className="py-4 mx-6 grid grid-cols-12 items-center">
                 <img
                   className="w-12 h-14 col-span-1"
-                  src={items.Image}
+                  src={items.images[0].imageurl}
                   alt="Product"
                 />
-                <p className="col-span-3">{items.Name}</p>
-                <p className="col-span-2">{items.Price}</p>
-                <p className="col-span-2">{items.Quantity}</p>
+                <p className="col-span-3">{items.name}</p>
+                <p className="col-span-2">{items.price}</p>
+                <p className="col-span-2">{items.quantity}</p>
                 <p className="col-span-2">
                   {/* {Number(items.Price) * Number(items.Quantity)} */}
-                  {items.Size}
+                  {items.size}
                 </p>
                 <p
-                  onClick={() => removeItem(items.$id,items.ProductId)}
+                  onClick={() => removeItem(items._id,items.name,items.size)}
                   className="col-span-2 cursor-pointer text-2xl"
                 >
-                  X
+                  x
                 </p>
               </div>
               <hr />

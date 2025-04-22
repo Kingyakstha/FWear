@@ -7,8 +7,11 @@ import bodyParser from "body-parser"
 
 const app= express()
 
+app.use(cookieParser())
+
 app.use (cors({
-    origin: process.env.CORS_ORIGIN,
+    // origin: process.env.CORS_ORIGIN,
+    origin:'http://localhost:5173',
     credentials:true
 })) 
 app.use(bodyParser.json());
@@ -19,7 +22,6 @@ app.use(express.urlencoded({
     extended: true
 }))
 app.use(express.static("public"))
-app.use(cookieParser())
 
 
 

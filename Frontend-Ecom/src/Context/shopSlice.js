@@ -6,8 +6,6 @@ const initialState={
     },
     cart:[
         {
-            category:'Women',
-            id:'666',
             image: "/src/Components/Assets/product_11.png",
             name: "Striped Flutter Sleeve Overlap Collar Peplum Hem Blouse",
             price: 85,
@@ -24,15 +22,13 @@ export const shopSlice=createSlice({
         addToCart:(state,action)=>{
             let b=0
             state.cart.map(cart_item=>{
-                if (cart_item.id==action.payload.id)
+                if (cart_item.name==action.payload.name && cart_item.size==action.payload.size)
                 {
                     cart_item.quantity+=1
                     b=1;
                 }
             })
             let item={
-                id:action.payload.id,
-                category:action.payload.category,
                 image:action.payload.image,
                 name:action.payload.name,
                 price:action.payload.price,
@@ -44,7 +40,7 @@ export const shopSlice=createSlice({
             // console.log(state.cart.length)
         },
         removeFromCart:(state,action)=>{
-            state.cart=state.cart.filter(cart=>cart.id!==action.payload)
+            state.cart=state.cart.filter(cart=>cart.name!==action.payload.name && cart.size!==action.payload.size)
             console.log('payload has ',action.payload)
         }
     }
