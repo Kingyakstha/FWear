@@ -5,7 +5,7 @@ import { getSavedProduct, saveProduct, unsaveProduct } from "../controller/save.
 const router= Router()
 
 router.route("/save-product/:productid").post(verifyJWT,saveProduct)
-router.route("/unsave-product/:saveid").post(unsaveProduct)
+router.route("/unsave-product/:productid").post(verifyJWT,unsaveProduct)
 
 router.route("/get-save").get(verifyJWT,getSavedProduct)
 

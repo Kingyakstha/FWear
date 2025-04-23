@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { nanoid } from '@reduxjs/toolkit';
 import Input from './Input';
-import dbService from '../appwrite/config';
 import { removeFromCart } from '../Context/shopSlice';
 import { useDispatch } from 'react-redux';
-import axios from 'axios';
+import { getCartItems, removefromCart } from '../appwrite/cartConfig';
 
 function CartItems() {
   const dispatch=useDispatch()
@@ -14,7 +13,8 @@ function CartItems() {
   const removeItem = async (id,productname,size) => {
     try {
       console.log('Removing item with ID:', id);
-      const item= await axios.post(`http://localhost:8000/api/v1/carts/remove-cart/${id}`)
+      const item=await removefromCart(id)
+      // const item= await axios.post(`http://localhost:8000/api/v1/carts/remove-cart/${id}`)
       if (item) {
         console.log('Item successfully deleted'); 
         dispatch(removeFromCart(productname,size))
@@ -31,12 +31,13 @@ function CartItems() {
     const fetchCartItems = async () => {
       try {
         // const posts = await dbService.getCartItem();
-        const cartItems= await axios.get("http://localhost:8000/api/v1/carts/get-cartitem",{
-          withCredentials: true
-        })
+        const cartItems= await getCartItems()
+        // const cartItems= await axios.get("http://localhost:8000/api/v1/carts/get-cartitem",{
+        //   withCredentials: true
+        // })
         if (cartItems) {
-          console.log('Fetched cart items:', cartItems.data.data[0].images[0].imageurl);
-          setAllItem(cartItems.data.data);
+          console.log('Fetched cart items:', cartItems[0].images[0].imageurl);
+          setAllItem(cartItems);
         }
       } catch (error) {
         console.error('Error fetching cart items:', error);
@@ -65,12 +66,12 @@ function CartItems() {
       <div key={nanoid()} className="w-4/5 justify-self-center">
 
         <div className="py-4 mx-6 grid grid-cols-12">
-          <p key="12" className="col-span-1">Products</p>
+          <p key="12" className="col-span-2">Products</p>
           <p key="43" className="col-span-3">Name</p>
           <p key="14" className="col-span-2">Price</p>
           <p key="15" className="col-span-2">Quantity</p>
           <p key="16" className="col-span-2">Size</p>
-          <p key="17" className="col-span-2">Remove</p>
+          <p key="17" className="col-span-1">Remove</p>
         </div>
 
         <hr />
@@ -80,7 +81,7 @@ function CartItems() {
             <React.Fragment key={id}>
               <div className="py-4 mx-6 grid grid-cols-12 items-center">
                 <img
-                  className="w-12 h-14 col-span-1"
+                  className="w-12 h-14 col-span-2"
                   src={items.images[0].imageurl}
                   alt="Product"
                 />
@@ -93,7 +94,7 @@ function CartItems() {
                 </p>
                 <p
                   onClick={() => removeItem(items._id,items.name,items.size)}
-                  className="col-span-2 cursor-pointer text-2xl"
+                  className="col-span-1 cursor-pointer text-2xl"
                 >
                   x
                 </p>

@@ -1,5 +1,5 @@
 import React from 'react'
-import FileUploader from '../Components/Addproduct'
+import FileUploader from '../Components/NewAddproduct'
 
 function AddProduct() {
   return (

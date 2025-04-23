@@ -5,7 +5,7 @@ import { addToCart, getCartItems, removeFromCart } from "../controller/cart.cont
 const router= Router()
 
 router.route("/add-cart/:productid").post(verifyJWT,addToCart)
-router.route("/remove-cart/:cartid").post(removeFromCart)
+router.route("/remove-cart/:cartid").get(removeFromCart)
 
 router.route("/get-cartitem").get(verifyJWT,getCartItems)
 export default router

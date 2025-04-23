@@ -2,10 +2,8 @@ import React,{useState} from 'react'
 import { FiPlusCircle, FiSearch, FiShoppingCart } from "react-icons/fi";
 import {useSelector,useDispatch} from 'react-redux'
 import {Link} from 'react-router-dom'
-import authService from '../appwrite/auth'
 import {logout as authLogout} from '../Context/authSlice'
-import { getRequest, postRequest } from './httpClient';
-import axios from 'axios';
+import { userLogout } from '../appwrite/authentication';
 
 function Navbar() {
     const dispatch=useDispatch()
@@ -14,20 +12,12 @@ function Navbar() {
     const status=useSelector(state=>state.auth.status)
     console.log('auth status is',status)
 
-
+ 
     const [isInputVisible, setInputVisible] = useState(false);
 
     const handleSearchClick = () => {
       setInputVisible(!isInputVisible);
     };
-
-    // getRequest('/products/get-product-gender/women')
-
-    // const loginData= {
-    //     "email":"Bikas@gmail.com" ,  
-    //     "password": "1234"
-    //    }
-    // postRequest('/users/login',loginData)
 
   return (
 
@@ -83,9 +73,10 @@ function Navbar() {
                     :
                     <div className='flex items-center gap-4'>
                         <Link to='/'>
-                            <button className='bg-white w-20 h-8 border-[#717171] rounded-3xl border text-[#515151] text-base font-medium' onClick={()=>{
-                                authService.userLogout()
-                                dispatch(authLogout())
+                            <button className='bg-white w-20 h-8 border-[#717171] rounded-3xl border text-[#515151] text-base font-medium' 
+                            onClick={async()=>{
+                                const response=await userLogout()
+                                if ( response) dispatch(authLogout())
                                 }}>Logout</button>
                         </Link>
                         <Link to='/cart'>

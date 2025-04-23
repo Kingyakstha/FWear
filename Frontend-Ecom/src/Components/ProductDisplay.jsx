@@ -9,6 +9,8 @@ import { RiCheckboxBlankCircleFill } from "react-icons/ri";
 import { AiFillLike } from "react-icons/ai";
 import { FaStar } from "react-icons/fa6";
 import axios from 'axios'
+import { addtoCart } from '../appwrite/cartConfig';
+import { getCurrentUser } from '../appwrite/authentication';
 
 
 
@@ -22,44 +24,41 @@ function ProductDisplay(props) {
   const [size,setSize]=useState('')
 
   let item={
-    // id:toString(product._id),
     name:product.productname, 
     price:product.price,
     quantity:quantity==0?1:quantity,
     size,
     image:product.image.image[0],
-    // id:toString(product._id),
-    // name:product.productname, 
-    // category:product.category,
-    // size,
-    // price:product.price,
-    // image:product.image.image[0],
-    // quantity:quantity==0?1:quantity
   }
 
   const addCart=async()=>{
-    const user=await axios.get("http://localhost:8000/api/v1/users/get-currentuser",{
-      withCredentials: true
-    })
-
-    // const user=await authService.getCurrentUser()
-    if(!user){
-      console.log('User not found')
-    }
-    else{
-    dispatch(addToCart(item))
-
-    let cartItem={}
-    // cartItem.product=product._id
-    cartItem.size=item.size
-    cartItem.quantity=item.quantity
-    // cartItem.user=user.data._id
-    console.log('Cart Item is :',cartItem)
-    const response= await axios.post(`http://localhost:8000/api/v1/carts/add-cart/${product._id}`,cartItem,{
-      withCredentials: true
-    })
-    console.log('The response is ',response)
- }
+  try {
+      // is getting user necessary ( it was necessary as the cart item need to be user id to store)
+      const user= await getCurrentUser();
+      // const user=await axios.get("http://localhost:8000/api/v1/users/get-currentuser",{
+      //   withCredentials: true
+      // })
+      // const user=await authService.getCurrentUser()
+      if(!user){
+        console.log('User not found')
+      }
+      else{
+      dispatch(addToCart(item))
+  
+      let cartItem={}
+      cartItem.size=item.size
+      cartItem.quantity=item.quantity
+      console.log('Cart Item is :',cartItem)
+      
+      const response= await addtoCart(product._id, cartItem)
+      // const response= await axios.post(`http://localhost:8000/api/v1/carts/add-cart/${product._id}`,cartItem,{
+      //   withCredentials: true
+      // })
+      console.log('The response is ',response)
+   }
+  } catch (error) {
+    console.log("Add to cart error ", error)
+  }
   }
 
   const numberOfIcons = 4;

@@ -53,18 +53,23 @@ const saveProduct = asyncHandler( async( req,res)=>{
 })
 
 const unsaveProduct = asyncHandler( async( req,res)=>{
-    const {saveid}= req.params
+    const {productid}= req.params
 
-    if (!saveid) {
-        throw new ApiError(401, "Save ID is required");
+    if (!productid) {
+        throw new ApiError(401, "Product ID is required");
     }
 
     // Validate the productid as a valid ObjectId
-    if (!mongoose.Types.ObjectId.isValid(saveid)) {
-        throw new ApiError(400, "Invalid save ID");
+    if (!mongoose.Types.ObjectId.isValid(productid)) {
+        throw new ApiError(400, "Invalid product ID");
     }
   
-    const unsave= await Save.findByIdAndDelete(saveid)
+    const user= await User.findById(req.user?._id)
+    const unsave= await Save.findOneAndDelete({
+      $and:[{product:productid},{user:user._id}]
+
+  })
+    // const unsave= await Save.findByIdAndDelete(saveid)
 
     if(!unsave){
         throw new ApiError(500,"Database error, saved product not found")

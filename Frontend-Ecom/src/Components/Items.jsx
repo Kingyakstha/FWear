@@ -2,13 +2,30 @@ import React,{useState} from 'react'
 import { Link } from 'react-router-dom'
 import dbService from '../appwrite/config'
 import { FaHeart } from "react-icons/fa";
+import { saveProduct, unsaveProduct } from '../appwrite/saveConfig';
 
 
-function Items(props) {
-  const [save,setSave]= useState(false)
+function Items(props) { 
+  console.log("Key of this item is ",props)
+  const [product,setProduct]= useState(props)
+  const [save,setSave]= useState(product.saved)
+  // console.log("saved while passing props", props.saved," name ",props.name)
 
-  const saveThis=()=>{
-    setSave(!save)
+  const saveThis=async()=>{
+    if(!save){
+      setSave(true)
+      const response= await saveProduct(product.id)
+      if (response) setProduct({...product,saved:true})
+      else  setSave(false)
+      
+
+    }
+    else{
+      setSave(false)
+      const response= await unsaveProduct(product.id)
+      if (response) setProduct({...product,saved:false})
+      else  setSave(true)
+    }
   }
 
   function upperCase(str){
@@ -20,9 +37,11 @@ function Items(props) {
       return str.charAt(0).toUpperCase()+ str.substring(1)
     }
   }
+  // console.log("saved in the usestate", save,"name ", props.name)
+
   return (
 
-    <div className='w-60  mt-4 shadow-lg rounded-2xl overflow-hidden relative'>
+    <div className='w-60  mt-4 shadow-lg rounded-2xl overflow-hidden relative select-none'>
     <Link to={`/product/${props._id || props.id}`}>
       {/* Image Container with Label */}
       <div className='relative'>

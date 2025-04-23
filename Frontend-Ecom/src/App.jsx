@@ -2,10 +2,10 @@ import { useState ,useEffect} from 'react'
 // import {Home} from './pages'
 import { Footer, Navbar} from './Components'
 import { Outlet } from 'react-router-dom'
-import authService from '../src/appwrite/auth';
 import {login as authLogin} from '../src/Context/authSlice'
 import { useDispatch } from 'react-redux';
 import { removeFromCart } from './Context/shopSlice';
+import { getCurrentUser } from './appwrite/authentication';
 
 function App() {
   const dispatch=useDispatch()
@@ -13,11 +13,15 @@ function App() {
     dispatch(removeFromCart('666'))
   })
   useEffect(() => {
-    const userAuth=authService.getCurrentUser()
-    if  (userAuth){
-      console.log('user ',userAuth)
-    dispatch(authLogin(userAuth))
+    console.log("inside the app")
+    async function fetchUser() {
+      const userAuth=await getCurrentUser()
+      console.log("user auth is ", userAuth)
+      if  (userAuth){
+      dispatch(authLogin())
+      }
     }
+   fetchUser
 
   },[]);
   return (

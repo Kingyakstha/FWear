@@ -7,7 +7,7 @@ const router= Router()
 
 router.route("/add-review/:productid").post(verifyJWT,addReview)
 router.route("/change-review/:reviewid").post(changeReview)
-router.route("/remove-review/:reviewid").post(removeReview)
+router.route("/remove-review/:reviewid").get(removeReview)
 
 router.route("/get-review/:productid").get(getReviews)
 

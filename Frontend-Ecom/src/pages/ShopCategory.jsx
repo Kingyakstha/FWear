@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import {useSelector} from 'react-redux'
 import dropdown_icon from '../Components/Assets/dropdown_icon.png'
-import axios from 'axios';
 import { Items } from '../Components'
 import { IoIosArrowBack,IoIosArrowForward } from "react-icons/io";
-
+import axios from 'axios';
 
 import dbService from '../appwrite/config'
 import {Query} from 'appwrite'
 import { IoIosArrowDown } from "react-icons/io";
+import { getSavedProduct } from '../appwrite/saveConfig';
+import { getGenderBasedProduct } from '../appwrite/productConfig';
+import {getImages} from "../appwrite/imagencolorConfig"
 
 
 
@@ -22,29 +24,41 @@ function ShopCategory(props) {
   // console.log('all products are',product['all_product'])
   const [prod_item,setProd_item]=useState([])
   const [limitedItems, setLimitedItems]=useState([])
+  const [savedItems,setSavedItems]= useState([])
+
+  const status=useSelector(state=>state.auth.status)
   
   useEffect(()=>{
     async function fetchProduct(){
       setPage(0)
       try {
       
-        const response= await axios.get(`http://localhost:8000/api/v1/products/get-product-gender/${props.category}`)
-        const products = response.data.data;
+        const products=await getGenderBasedProduct(props.category)
+        // const response= await axios.get(`http://localhost:8000/api/v1/products/get-product-gender/${props.category}`)
+
 
         const productWithImage= await Promise.all(
           products.map(async(prod)=>{
             try {
-              const response= await axios.get(`http://localhost:8000/api/v1/images/getImages/${prod._id}`)
-              console.log("Response for the image is ", response.data.data[0].color[0].image[0])
-              const image=response.data?.data[0].color[0].image[0]
-              if(image)
-              {
-                return {
-                  ...prod,
-                  image:response.data.data[0].color[0].image[0]
+
+              const response=await getImages(prod._id)
+              // const response= await axios.get(`http://localhost:8000/api/v1/images/getImages/${prod._id}`)
+              console.log("Response for the image is ", response[0].color[0].image[0])
+              //correction needed
+              if( response ){
+                const image=response[0].color[0].image[0];
+                if(image)
+                {
+                  return {
+                    ...prod,
+                    // image:response.data.data[0].color[0].image[0]
+                    image:image
+  
+                  }
                 }
+                return null;
               }
-              return null;
+             
              
             } catch (error) {
               console.log("Error occured while fetching the images or image doesn't exist", error)
@@ -63,18 +77,33 @@ function ShopCategory(props) {
     
   },[props])
 
-  useEffect(()=>{
-    setTotal(prod_item.length)
-    console.log("The length of prod_item:",totalProduct);
 
-    const items=prod_item.slice(page*limit, limit*(page+1))
-    setLimitedItems(items)
-    console.log("Limited items are ",limitedItems)
+  useEffect(()=>{
+    async function fetchSavedProducts() {
+      setTotal(prod_item.length)
+
+      console.log("The length of prod_item:",totalProduct);
+  
+      const items=prod_item.slice(page*limit, limit*(page+1))
+      setLimitedItems(items)
+      console.log("Limited items are ",limitedItems)
+  
+      console.log(`Status is ${status} and limited products are `,limitedItems)
+      
+      if(status){
+        const saved= await getSavedProduct()
+        console.log("saved is :",saved)
+        const savedArray= saved.data.map((items)=> {return items.productid})
+        console.log("saved array is :",savedArray)
+        setSavedItems(savedArray)
+      }
+    }
+    fetchSavedProducts()
+  
 
   },[page,prod_item])
  
   const sortOptions=["Recommended","New","Best Seller","Price"]
-  console.log('hi',prod_item)
   return (
     // (props.category==='men'?
       <div className='w-screen flex flex-col items-center mt-4'>
@@ -88,11 +117,12 @@ function ShopCategory(props) {
         </div>
       </div>
       <div className='mt-6 ml-7 flex flex-wrap gap-x-20 gap-y-2 mx-auto px-20'>
-      {limitedItems.map((items,i)=>{
+      {limitedItems && limitedItems.map((items,i)=>{
           if (props.category===items.gender)
           {
-          console.log('Item in it are ', items)
-          return <Items key={i} id={items._id} name={items.productname} description={items.description} image={items.image} new_price={items.price - 0.15* items.price} old_price={items.price} />
+            console.log("items is ::",items)
+          //unique key is needed to solve the issue of haveing both page having same saved
+          return <Items key={items.productname} id={items._id} name={items.productname} description={items.description} image={items.image} new_price={items.price - 0.15* items.price} old_price={items.price} saved={savedItems.includes(items._id)?true:false} />
           }
         })}
       </div>

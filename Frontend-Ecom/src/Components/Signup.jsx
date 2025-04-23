@@ -5,11 +5,9 @@ import {useForm} from 'react-hook-form'
 import { AiOutlineEyeInvisible,AiOutlineEye } from "react-icons/ai";
 import { IoAddCircleOutline,IoRemoveCircleOutline } from "react-icons/io5";
 import avatar_icon from "../Components/Assets/avatar icon.png" ;
-import axios from 'axios';
 import {useDispatch} from 'react-redux'
-
-import authService from '../appwrite/auth';
 import {login} from '../Context/authSlice'
+import { userSignin } from '../appwrite/authentication';
 
 
 function Signup() {
@@ -44,6 +42,7 @@ function Signup() {
     const {register,handleSubmit}=useForm()
 
     const signup=async(data)=>{
+
         console.log("the data is ",data)
         if (!selectedImage){
             console.log("image not selected"); 
@@ -56,23 +55,12 @@ function Signup() {
         formData.append('password',data.password)
 
         try {
-            console.log("hola")
-            const response= await axios.post("http://localhost:8000/api/v1/users/register",formData,
-            {
-                headers: {
-                  'Content-Type': 'multipart/form-data',
-                }}
-            )
-            console.log("response is :",response)
-            dispatch(login());
-            navigate('/')
-
-            // const session=await authService.createAccount(data)
-            // if (session)
-            // {
-            //     console.log('Session is ',session)
-            // }
-           
+            const response= await userSignin(formData)
+            if (response){
+                dispatch(login());
+                navigate('/')
+            }
+       
         } catch (error) {
             console.log("Error when signing up ",error)
         }

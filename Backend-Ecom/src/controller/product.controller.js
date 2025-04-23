@@ -3,7 +3,7 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import {Product} from "../models/product.model.js";
 import mongoose from 'mongoose'
-// import { uploadOnCloudinary } from "../utils/cloudinary.js";
+// import { uploadOnCloudinary } from "../utils/cloudinary.js"; 
 
 const addProduct= asyncHandler( async (req, res)=>{
     const {productname, description,availablesizes, gender, price, stock, category, materials}= req.body
@@ -127,12 +127,12 @@ const updateProduct= asyncHandler( async( req,res)=>{
 //TODO LIST
 //get product based on categories, gender and other queries
 const getProduct= asyncHandler(async(req,res)=>{
-    const {id}=req.params
-    if( !id){
+    const {productId}=req.params
+    if( !productId){
         throw new ApiError(400,"ID is not provided")
     }
 
-    const product=await Product.findById({_id:id})
+    const product=await Product.findById({_id:productId})
     if( !product){
         throw new ApiError(400,"Product is not available anymore")
     }

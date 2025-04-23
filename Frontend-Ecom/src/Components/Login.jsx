@@ -5,9 +5,8 @@ import {useForm} from 'react-hook-form'
 import { AiOutlineEyeInvisible,AiOutlineEye } from "react-icons/ai";
 import authService from '../appwrite/auth';
 import { useDispatch } from 'react-redux';
-
+import {userLogin, userLogout, getCurrentUser} from "../appwrite/authentication"
 import {login as authLogin} from '../Context/authSlice'
-import axios from 'axios';
 
 function Login() {
     const navigate=useNavigate()
@@ -20,22 +19,18 @@ function Login() {
 
     const  login=async (data)=>{
         try {
-            const response= await axios.post("http://localhost:8000/api/v1/users/login", data,{
-                withCredentials: true
-              })
-                console.log("Successfully logged in ",response.data.data?.user)
+
+            const response= await userLogin(data)
+            // const response= await axios.post("http://localhost:8000/api/v1/users/login", data,{
+            //     withCredentials: true
+            //   })
+            //     console.log("Successfully logged in ",response.data.data?.user)
+            if (response){
                 dispatch(authLogin());
                 navigate('/')
+            }
 
-          
-            // const session=await authService.userLogin(data)
-            // if (session)
-            // {
-            //     console.log('Login session is ',session)
-            //     const userData=await authService.getCurrentUser()
-            // }
-            // else 
-            console.log('no login')
+
         } catch (error) {
             console.log('Login error :: ',error)
         }
@@ -77,10 +72,9 @@ function Login() {
                 
                 </div>
                 
-                <button className='w-full py-4 bg-red-500 rounded-xl text-white cursor-pointer' onClick={()=>{  const userAuth=authService.getCurrentUser()
-            console.log(userAuth)}}>Login</button>
+                <button className='w-full py-4 bg-red-500 rounded-xl text-white cursor-pointer'>Login</button>
             </form>
-            <p onClick={()=>{authService.userLogout()}}>Don't have an account? <Link to='/signup'><span className='text-red-500'>Signup</span></Link></p>
+            <p onClick={userLogout}>Don't have an account? <Link to='/signup'><span className='text-red-500'>Signup</span></Link></p>
         </div>
     </div>
   )

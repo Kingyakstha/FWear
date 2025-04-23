@@ -2,7 +2,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
-import {Cart, LoginSignup, Shop, ShopCategory,Product,Tictac} from './pages'
+import {Cart, LoginSignup, Shop, ShopCategory,Product,AddProduct} from './pages'
 import {createBrowserRouter,RouterProvider} from 'react-router-dom'
 import {Provider} from 'react-redux'
 import {shopStore} from './Context/shopStore.js'
@@ -10,7 +10,7 @@ import men_banner from './Components/Assets/banner_mens.png'
 import kid_banner from './Components/Assets/banner_kids.png'
 import women_banner from './Components/Assets/banner_women.png'
 // import AddProduct from './pages/AddProduct.jsx'
-import NewAddproduct from './Components/NewAddproduct.jsx'
+// import NewAddproduct from './Components/NewAddproduct.jsx'
 
 const router=createBrowserRouter([
   {
@@ -51,12 +51,12 @@ const router=createBrowserRouter([
       },
       {
         path:"/addproduct",
-        element:<NewAddproduct/>
+        element:<AddProduct/>
       },
-      {
-        path:"/tic",
-        element:<Tictac/>
-      },
+      // {
+      //   path:"/tic",
+      //   element:<Tictac/>
+      // },
     ]
   }
 ])
