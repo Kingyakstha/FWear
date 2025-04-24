@@ -9,6 +9,7 @@ import {shopStore} from './Context/shopStore.js'
 import men_banner from './Components/Assets/banner_mens.png'
 import kid_banner from './Components/Assets/banner_kids.png'
 import women_banner from './Components/Assets/banner_women.png'
+import ReviewForm from './Components/ReviewForm.jsx'
 // import AddProduct from './pages/AddProduct.jsx'
 // import NewAddproduct from './Components/NewAddproduct.jsx'
 
@@ -52,6 +53,7 @@ const router=createBrowserRouter([
       {
         path:"/addproduct",
         element:<AddProduct/>
+        // element:<ReviewForm/>
       },
       // {
       //   path:"/tic",

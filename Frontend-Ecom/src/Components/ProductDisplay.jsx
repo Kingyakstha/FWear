@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { addToCart } from '../Context/shopSlice'
 import { useDispatch } from 'react-redux'
 import dbService from '../appwrite/config'
@@ -6,16 +6,20 @@ import authService from '../appwrite/auth';
 import Breadcrum from './Breadcrum'
 import { FiStar } from 'react-icons/fi'
 import { RiCheckboxBlankCircleFill } from "react-icons/ri";
+import { BiMessageAdd } from "react-icons/bi";
 import { AiFillLike } from "react-icons/ai";
 import { FaStar } from "react-icons/fa6";
-import axios from 'axios'
+
 import { addtoCart } from '../appwrite/cartConfig';
 import { getCurrentUser } from '../appwrite/authentication';
+import { getQnas } from '../appwrite/qnaConfig';
+import { getReview } from '../appwrite/reviewConfig';
 
 
 
 
 function ProductDisplay(props) { 
+
   const dispatch=useDispatch()
   const {product}=props
   // console.log("Product ",product)
@@ -85,6 +89,29 @@ function ProductDisplay(props) {
   const shippingClick=()=>{
     setShippingClicked(!shippingClicked);
   }
+
+  const [QnA, setQna]=useState()
+  const [Reviews, setReviews]=useState()
+  const [stars,setStars]=useState(0)
+  useEffect(()=>{
+    async function fetchQna() {
+      try {
+        const reviews=await getReview(product._id)
+        const qna= await getQnas(product._id)
+        // console.log("Qna is :",qna," Review is :",reviews)
+        if(qna) setQna(qna)
+        if(reviews) setReviews(reviews)
+        let star=0
+        reviews.map(items=>star+=items.star)
+        let avgStar=star/reviews.length
+        setStars(avgStar)
+      } catch (error) {
+        console.log("Error while fetching ", error)
+      }
+    }
+
+    fetchQna()
+  },[])
 
 
   return (
@@ -229,17 +256,18 @@ function ProductDisplay(props) {
     <hr className='w-full mt-2 mb-6'></hr>
   </div>
   <div className='ml-10 justify-items-start' >
-    {[...Array(noOfQ)].map((_,index)=>(
-      <div className={`w-2/3 bg-white shadow-sm p-6 mb-4 rounded-lg border-l-2 ${answer? `border-green-400`: `border-gray-400`}`}>
+    {/* {[...Array(noOfQ)].map((_,index)=>( */}
+    {QnA && QnA.map((items)=>(
+      <div className={`w-2/3 bg-white shadow-sm p-6 mb-4 rounded-lg border-l-2 ${items.answer? `border-green-400`: `border-gray-400`}`}>
         <div  className='flex items-center justify-start '>
-          <div className="w-6 h-6 rounded-full overflow-hidden border-2 border-gray-300">
+          <div className="size-8 rounded-full overflow-hidden border-2 border-gray-300">
               <img
-              src={product.image}
+              src={items.avatar}
               alt="User Avatar"
               className="w-full h-full object-cover"
             />
         </div>
-        <div className='ml-4 text-sm text-gray-400'>User 1</div>
+        <div className='ml-4 text-sm text-gray-400'>{items.name}</div>
         <div className='ml-4 text-sm text-gray-400'> Asked: Aug 23, 2023</div>
       </div>
   
@@ -249,20 +277,22 @@ function ProductDisplay(props) {
       <div className='mt-4 mb-4'>
           
         <div className='flex items-center'>
-         <p  className='font-extrabold text-xl'>This is the most excrueting question that I have been thinking of asking?</p>
+         <p  className='font-extrabold text-xl'>{items.question}</p>
         </div>
-   
+        {items.answer && (
           <div className='mt-4 mb-4 flex'>
-          <p className='text-gray-600 text-sm'>I think this is the appropriate answer</p>
+          <p className='text-gray-600 text-sm'>{items.answer}</p>
           </div>
+        )}
+          
 
 
           </div>
           <hr className='w-full mb-3'></hr>
 
-        <div className='flex w-10 h-10 rounded-full border-2 justify-center items-center border-gray-300'>
+        {/* <div className='flex w-10 h-10 rounded-full border-2 justify-center items-center border-gray-300'>
         <AiFillLike  className='text-gray-400 '/>
-        </div>
+        </div> */}
        
       </div>
     ))}
@@ -280,30 +310,38 @@ function ProductDisplay(props) {
     <div className='text-left'>
       <p className='text-xl'>Overall rating</p>
       <div className='flex gap-1 items-center '>
-      <p className='text-2xl font-extrabold'> 4.8</p><FaStar className='ml-4 size-6 text-yellow-400' /><FaStar className=' size-6 text-yellow-400' /> <FaStar className='text-yellow-400 size-6' /> <FaStar className='text-yellow-400 size-6' /><FaStar className='text-yellow-400 size-6' />
-      <p className='text-gray-300 text-xs ml-2'>2,103 reviews</p>
+      <p className='text-2xl font-extrabold mr-4'> {stars}</p>
+      {[...Array(5)].map((_,index)=>( <FaStar className=' size-6 text-yellow-400' />))}
+      {/* <FaStar className='ml-4 size-6 text-yellow-400' /><FaStar className=' size-6 text-yellow-400' /> <FaStar className='text-yellow-400 size-6' /> <FaStar className='text-yellow-400 size-6' /><FaStar className='text-yellow-400 size-6' /> */}
+      <p className='text-gray-300 text-xs ml-2'>{Reviews?.length} reviews</p>
       </div>
     </div>
 
     <div>
-      <p className='border-2 rounded-lg py-2 px-6 bg-blue-500 text-white cursor-pointer'>Add review</p>
+      <p className='flex bg-blue-600 text-white px-4 py-2 rounded-lg 
+                hover:bg-blue-700 transition-all duration-300 shadow-md hover:shadow-lg 
+                transform hover:-translate-y-0.5 active:translate-y-0 cursor-pointer'>
+      <BiMessageAdd className='mr-2 mt-1 size-5'/>
+        Add review</p>
     </div>
   </div>
 
   <div>
-    {[...Array(noOfR)].map((_,index)=>(
+    {/* {[...Array(noOfR)].map((_,index)=>( */}
+    {Reviews && Reviews.map((items)=>(
+
       <div className='flex flex-col justify-start '>
         <div className='flex items-center '>
-        <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-gray-300">
+        <div className="size-8 rounded-full overflow-hidden border-2 border-gray-300">
               <img
-              src={product.image}
+              src={items.avatar}
               alt="User Avatar"
               className="w-full h-full object-cover"
             />
         </div>
 
         <div className='text-left'>
-          <div className='ml-4 text-base  font-bold'>User 1</div>
+          <div className='ml-4 text-base  font-bold'>{items.username}</div>
           <div className='ml-4 text-xs text-gray-400'> 3 days ago</div>
         </div>
       
@@ -314,14 +352,14 @@ function ProductDisplay(props) {
       <div className='ml-14'>
 
         <div className='flex mt-6 mb-2 gap-1 '>
-              {[...Array(noOfstars)].map((_,index)=>(
+              {[...Array(Number(items.star))].map((_,index)=>(
                 <FaStar className='text-yellow-400' id={index}/>
               ))}
           </div>
 
 
           <div className='mb-10 text-left'>
-              <p>This is the review !!!</p>
+              <p>{items.review}</p>
           </div>
 
       </div>
