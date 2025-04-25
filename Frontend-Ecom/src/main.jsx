@@ -35,7 +35,7 @@ const router=createBrowserRouter([
         element:<ShopCategory banner={women_banner} category="women" />
       },
       {
-        path:"/kid",
+        path:"/kids",
         element:<ShopCategory banner={kid_banner} category="kids" />
       },
       {

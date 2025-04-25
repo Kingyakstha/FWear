@@ -71,6 +71,44 @@ const addAnswer= asyncHandler(async (req,res)=>{
     )
 })
 
+const changeQuestion=asyncHandler(async(req,res)=>{
+    const {questionid}=req.params 
+    const {question} =req.body
+
+    console.log("question in body is ",question)
+
+    if (!questionid) {
+        throw new ApiError(401, "Question ID is required");
+    }
+
+    // Validate the productid as a valid ObjectId
+    if (!mongoose.Types.ObjectId.isValid(questionid)) {
+        throw new ApiError(400, "Invalid question ID");
+    }
+
+    const qna= await QnA.findByIdAndUpdate(
+        questionid,
+        {
+            $set:{
+                question:question
+            }
+        },
+        {new:true}
+    )
+
+    if(!qna){
+        throw new ApiError(400,"Error while updating question ::")
+
+    }
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(200,qna,"Successfully edited the question !!!")
+    )
+})
+
+
 const removeQuestion= asyncHandler (async(req,res)=>{
     const {questionid}= req.params
 
@@ -182,4 +220,4 @@ const getQnas =asyncHandler(async (req,res)=>{
 
 })
 
-export {addAnswer,addQuestion,removeQuestion, removeAnswer, getQnas}
+export {addAnswer,addQuestion,changeQuestion,removeQuestion, removeAnswer, getQnas}

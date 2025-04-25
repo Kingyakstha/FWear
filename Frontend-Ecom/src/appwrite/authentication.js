@@ -62,7 +62,7 @@ async function getCurrentUser() {
         })
         if (response){
             console.log("Successfully obtained current user ",response)
-            return response;
+            return response.data.data;
         }
         else return null;
 

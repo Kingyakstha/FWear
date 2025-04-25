@@ -7,7 +7,7 @@ function Breadcrum(props) {
     console.log(product)
   return (
     <div className='flex items-center gap-1 mt-10 '>
-        HOME <IoIosArrowForward /> <Link to='/'>SHOP </Link><IoIosArrowForward /><Link to={`/${product.category}`}>{product.category} </Link><IoIosArrowForward /> The hoodie
+        HOME <IoIosArrowForward /> <Link to='/'>SHOP </Link><IoIosArrowForward /><Link to={`/${product.gender}`}>{product.gender} </Link><IoIosArrowForward /> {product.productname}
     </div>
   )
 }

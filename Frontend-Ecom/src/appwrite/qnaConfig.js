@@ -30,6 +30,23 @@ async function removeQuestion(questionid) {
 }
 
 
+async function changeQuestion(questionid,data) {
+    try {
+
+        const response= await axios.post(`${baseURL}/change-question/${questionid}`,{question:data},{
+            withCredentials:true
+        })
+        console.log(response)
+        if(response) {
+            console.log("editing question",response,"id",questionid)
+            return true;
+        }
+        else return false;
+    } catch (error) {
+        console.log("Error while changing question ::",error)
+    }
+}
+
 async function addAnswer(questionid,data) {
     try {
 
@@ -76,5 +93,6 @@ export {
     addQuestion,
     addAnswer,
     removeQuestion,
-    removeAnswer
+    removeAnswer,
+    changeQuestion
 }

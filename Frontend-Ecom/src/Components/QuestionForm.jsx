@@ -1,18 +1,14 @@
-
 import React, { useState, useRef, useEffect } from 'react';
-import { Star } from 'lucide-react';
 
-function ReviewForm({ isOpen, onClose, onSubmit }) {
+function QuestionForm({ isOpen, onClose, onSubmit }) {
   const [text, setText] = useState('');
-  const [rating, setRating] = useState(0);
   const modalRef = useRef(null);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (text.trim() && rating > 0) {
-      onSubmit({ text, rating });
+    if (text.trim()) {
+      onSubmit({ text });
       setText('');
-      setRating(0);
       onClose(); // close after submit
     }
   };
@@ -39,32 +35,13 @@ function ReviewForm({ isOpen, onClose, onSubmit }) {
         onSubmit={handleSubmit}
         className="w-full max-w-lg p-6 bg-white rounded-xl shadow-lg space-y-4 relative"
       >
-
         <div>
-          <label className="block text-lg font-medium text-gray-700">Rating</label>
-          <div className="flex mt-1">
-            {[...Array(5)].map((_, indx) => (
-              <Star
-                key={indx}
-                onClick={() => setRating(indx + 1)}
-                className={`cursor-pointer ${
-                  indx < rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'
-                }`}
-              />
-            ))}
-          </div>
-          {rating === 0 && (
-            <p className="text-xs text-red-500 mt-1">Please select a rating</p>
-          )}
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Your Review</label>
+          <label className="block text-lg font-medium text-gray-700">Your Question</label>
           <textarea
             rows="4"
             value={text}
             onChange={(e) => setText(e.target.value)}
-            placeholder="Share your experience..."
+            placeholder="Ask your question..."
             className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
             required
           />
@@ -80,10 +57,10 @@ function ReviewForm({ isOpen, onClose, onSubmit }) {
           </button>
           <button
             type="submit"
-            disabled={!text.trim() || rating === 0}
+            disabled={!text.trim()}
             className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-blue-300"
           >
-            Post Review
+            Post Question
           </button>
         </div>
       </form>
@@ -91,4 +68,4 @@ function ReviewForm({ isOpen, onClose, onSubmit }) {
   );
 }
 
-export default ReviewForm;
+export default QuestionForm;

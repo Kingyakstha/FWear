@@ -21,7 +21,7 @@ function App() {
       dispatch(authLogin())
       }
     }
-   fetchUser
+   fetchUser()
 
   },[]);
   return (
