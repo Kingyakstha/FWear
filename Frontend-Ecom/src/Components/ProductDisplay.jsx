@@ -23,9 +23,9 @@ import { addReview } from '../appwrite/reviewConfig';
 import { changeQuestion  as ChangeQuestion} from '../appwrite/qnaConfig';
 
 
-import dbService from '../appwrite/config'
-import authService from '../appwrite/auth';
-import { AiFillLike } from "react-icons/ai";
+// import dbService from '../appwrite/config'
+// import authService from '../appwrite/auth';
+// import { AiFillLike } from "react-icons/ai";
 
 function ProductDisplay(props) { 
 
@@ -364,7 +364,7 @@ useEffect(()=>{
     <QuestionForm 
             isOpen={questionForm}
             onClose={() => setQuestionForm(false)}
-            onSubmit={(e)=>handleQuestionSubmit(e)}
+            onSubmit={handleQuestionSubmit}
     />
     <div className='ml-10 justify-items-start' >
 

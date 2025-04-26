@@ -3,9 +3,9 @@ import Input from './Input'
 import {Link, useNavigate} from 'react-router-dom'
 import {useForm} from 'react-hook-form'
 import { AiOutlineEyeInvisible,AiOutlineEye } from "react-icons/ai";
-import authService from '../appwrite/auth';
+// import authService from '../appwrite/auth';
 import { useDispatch } from 'react-redux';
-import {userLogin, userLogout, getCurrentUser} from "../appwrite/authentication"
+import {userLogin, userLogout} from "../appwrite/authentication"
 import {login as authLogin} from '../Context/authSlice'
 
 function Login() {

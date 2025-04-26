@@ -40,7 +40,7 @@ function Navbar() {
                 </Link>
             </li>
             <li onClick={()=>{setMenu("kids")}}>
-                <Link to='kid'>
+                <Link to='kids'>
                     Kids {menu==="kids"?(<hr className='border-b-4 border-rose-600 mt-2'></hr>):null}
                 </Link>
             </li>

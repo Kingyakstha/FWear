@@ -13,6 +13,8 @@ import Offers from "./Offers";
 import Popular from "./Popular";
 import ProductDisplay from "./ProductDisplay";
 import Signup from "./Signup";
+import QuestionForm from "./QuestionForm";
+import ReviewForm from "./ReviewForm";
 
 export {
     Breadcrum,
@@ -29,5 +31,7 @@ export {
     Offers,
     Popular,
     ProductDisplay,
+    QuestionForm,
+    ReviewForm,
     Signup
 }

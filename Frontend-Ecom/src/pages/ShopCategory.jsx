@@ -3,10 +3,9 @@ import {useSelector} from 'react-redux'
 import dropdown_icon from '../Components/Assets/dropdown_icon.png'
 import { Items } from '../Components'
 import { IoIosArrowBack,IoIosArrowForward } from "react-icons/io";
-import axios from 'axios';
 
-import dbService from '../appwrite/config'
-import {Query} from 'appwrite'
+// import dbService from '../appwrite/config'
+// import {Query} from 'appwrite'
 import { IoIosArrowDown } from "react-icons/io";
 import { getSavedProduct } from '../appwrite/saveConfig';
 import { getGenderBasedProduct } from '../appwrite/productConfig';

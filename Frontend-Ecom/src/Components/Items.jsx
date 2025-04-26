@@ -1,6 +1,6 @@
 import React,{useState} from 'react'
 import { Link } from 'react-router-dom'
-import dbService from '../appwrite/config'
+// import dbService from '../appwrite/config'
 import { FaHeart } from "react-icons/fa";
 import { saveProduct, unsaveProduct } from '../appwrite/saveConfig';
 
@@ -50,8 +50,8 @@ function Items(props) {
           alt={props.title}
           src={
             props.image.includes('/')
-              ? props.image
-              : dbService.getFilePreview(props.image)
+              ? props.image:null
+              // : dbService.getFilePreview(props.image)
           }
         />
         {/* Label */}
