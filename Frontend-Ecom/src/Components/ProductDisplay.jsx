@@ -27,20 +27,31 @@ import { changeQuestion  as ChangeQuestion} from '../appwrite/qnaConfig';
 // import authService from '../appwrite/auth';
 // import { AiFillLike } from "react-icons/ai";
 
-function ProductDisplay(props) { 
+function ProductDisplay({product}) { 
 
     const dispatch=useDispatch()
-    const {product}=props
     const [quantity,setQuantity]=useState(0)
     const [size,setSize]=useState('')
     const [currentUserName,setUserName]=useState()
+    const [currentImage,setCurrentImage]=useState(product.image[0].image[0])
+
+    console.log("Props value is ",product)
+    function upperCase(str){
+        if(typeof str !== 'string' || str.length == 0){
+          return null
+        }
+        else
+        {
+          return str.charAt(0).toUpperCase()+ str.substring(1)
+        }
+    }
 
     let item={
         name:product.productname, 
         price:product.price,
         quantity:quantity==0?1:quantity,
         size,
-        image:product.image.image[0],
+        image:product.image[0].image[0],
     }
 
     useEffect(()=>{
@@ -217,18 +228,29 @@ useEffect(()=>{
 
 {/* {||||||||||||||||||||||||||||||||||||||||||||***** Left section ( images ) *****|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||} */}
 
-    <div className='mt-7 flex w-full justify-center gap-0 font-mono'>
-        <div className='flex flex-wrap self-start w-6/12 gap-6 mt-10 '>
-            {[...Array(numberOfImages)].map((_,index)=>(
-            <div className='w-72 h-96 mb-3 shadow-xl rounded-xl p-4 flex items-center justify-center'>
-                <img
-                    id={index}
-                    className='max-h-full max-w-full object-contain'
-                    src={product.image.image[0]}
-                    alt='product'
-                />
-            </div>
-            ))}
+    <div className='mt-10 flex w-full justify-center gap-0 font-mono'>
+        <div className='flex self-start w-5/12 gap-6 mt-10 '>
+        <div className='flex flex-col w-1/4 h-auto justify-start gap-3 '>
+            {/* {console.log("Images in the product are :",product.image[1].image[0])} */}
+                {[...Array(product.image.length)].map((_,index)=>(
+                <div className='size-24 mb-3 shadow-xl rounded-sm overflow-hidden flex items-center justify-center' onClick={()=>setCurrentImage(product?.image[index].image[0])}>
+                    <img
+                        id={index}
+                        className='max-h-full w-full object-cover'
+                        src={product?.image[index].image[0]}
+                        alt='product'
+                    />
+                </div>
+                ))}
+        </div>
+        <div className='w-2/4 shadow-xl rounded-lg overflow-hidden flex items-center justify-center'>
+                    {currentImage &&(<img
+                        className='max-h-full w-full object-cover'
+                        src={currentImage}
+                        alt='product'
+                    />)}
+        </div>
+        
         </div>
 
 {/* {||||||||||||||||||||||||||||||||||||||||||||***** Right section ( Product information) *****|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||} */}
@@ -243,7 +265,7 @@ useEffect(()=>{
 {/* {****************************  Detail Information  ****************************} */}
 
         <div className='flex items-center justify-between mt-4 '>
-            <p className='font-semibold text-3xl'>{product.productname}</p>
+            <p className='font-semibold text-3xl'>{upperCase(product.productname)}</p>
             <div className='mt-4 flex gap-6 items-end'>
                 <p className='text-[#8c8c8c] text-lg font-semibold line-through'>$ {product.price}</p>
                 <p className=' text-lg text-red-500 font-semibold'>$ {product.price - (0.15*product.price)}</p>

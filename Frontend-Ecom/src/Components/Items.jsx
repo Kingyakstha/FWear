@@ -49,8 +49,8 @@ function Items(props) {
           className='rounded-2xl w-full h-60 object-cover hover:scale-105 transition-transform duration-300'
           alt={props.title}
           src={
-            props.image.includes('/')
-              ? props.image:null
+            props.image[0].image[0].includes('/')
+              ? props.image[0].image[0]:null
               // : dbService.getFilePreview(props.image)
           }
         />

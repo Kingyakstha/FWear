@@ -53,8 +53,8 @@ const router=createBrowserRouter([
       },
       {
         path:"/addproduct",
-        element:<AddProduct/>
-        // element:<Filter/>
+        // element:<AddProduct/>
+        element:<Filter onFilterChange={(e)=>console.log("The arrays are ::",e)}/>
         // element:<ReviewForm/>
       },
       // {

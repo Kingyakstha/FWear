@@ -3,6 +3,8 @@ import {useSelector} from 'react-redux'
 import dropdown_icon from '../Components/Assets/dropdown_icon.png'
 import { Items } from '../Components'
 import { IoIosArrowBack,IoIosArrowForward } from "react-icons/io";
+import { RxCross2 ,RxPlus} from "react-icons/rx";
+
 
 // import dbService from '../appwrite/config'
 // import {Query} from 'appwrite'
@@ -10,6 +12,7 @@ import { IoIosArrowDown } from "react-icons/io";
 import { getSavedProduct } from '../appwrite/saveConfig';
 import { getGenderBasedProduct } from '../appwrite/productConfig';
 import {getImages} from "../appwrite/imagencolorConfig"
+import Filter from '../Components/Filter';
 
 
 
@@ -42,10 +45,10 @@ function ShopCategory(props) {
 
               const response=await getImages(prod._id)
               // const response= await axios.get(`http://localhost:8000/api/v1/images/getImages/${prod._id}`)
-              console.log("Response for the image is ", response[0].color[0].image[0])
+              console.log("Response for the image is ", response[0].color)
               //correction needed
               if( response ){
-                const image=response[0].color[0].image[0];
+                const image=response[0].color;
                 if(image)
                 {
                   return {
@@ -103,28 +106,100 @@ function ShopCategory(props) {
   },[page,prod_item])
  
   const sortOptions=["Recommended","New","Best Seller","Price"]
+
+  const [filterData, setFilters] = useState({
+    categoryFilter: [],
+    sizeFilter: [],
+    colorFilter: [],
+    priceFilter: [],
+  });
+
+  const handleFilterChange = (newFilters) => {
+    setFilters(newFilters);
+  };
+
+  // useEffect(()=>{
+  //   console.log("Received filter data is :",filterData?.colorFilter.length !==0 && 6)
+  // },[filterData])
+
   return (
     // (props.category==='men'?
       <div className='w-screen flex flex-col items-center mt-4'>
       <div className='flex'>
       <img className='mt-9' src={props.banner}></img>
       </div>
-      <div className='w-4/5 mt-10 flex justify-between  items-center'>
-        <p>Showing {limitedItems.length} out of {Number(totalProduct)} products</p>
-        <div className='w-28 py-2 gap-2 flex rounded-full border border-black justify-center '>
-          Sort by<img className='h-2 w-3 my-auto' src={dropdown_icon}></img>
+
+      <div className='w-full flex'>
+        <div className='w-1/5 mt-4 mr-10'>
+          <Filter filters={filterData} onFilterChange={handleFilterChange}/>
+        </div>
+        <div className='w-4/5'>
+
+        <div className='w-full h-min mt-4 flex justify-between'>
+            <div className='flex space-x-2 h-min'>
+                <div className='py-1 px-3 h-min rounded-lg border-2 flex items-center bg-black text-white'>FILTERS</div>
+                <p className='border-l-2 py-1 h-8 mr-4 ml-2 '> </p>
+                <div className='flex flex-wrap gap-2'>
+                { filterData?.categoryFilter.length !==0 && (filterData?.categoryFilter.map((items)=>{
+                    return(
+                        <div key={items} className='py-1 px-3 h-min rounded-lg border-2 flex items-center'>
+                            {items} 
+                            <RxCross2 className='ml-2' onClick={()=>{
+                                let newCategoryFilter=filterData.categoryFilter.filter(item=>item !=items)
+                                setFilters({...filterData,categoryFilter : newCategoryFilter})
+                              }
+                              }/>
+                        </div>
+                    )
+                }))}
+                { filterData?.sizeFilter.length !==0 && (filterData?.sizeFilter.map((items)=>{
+                    return(
+                        <div key={items} className='py-1 px-3 h-min rounded-lg border-2 flex items-center'>
+                            {items} 
+                            <RxCross2 className='ml-2' onClick={()=>{
+                                let newCategoryFilter=filterData.sizeFilter.filter(item=>item !=items)
+                                setFilters({...filterData,sizeFilter : newCategoryFilter})
+                              }
+                              }/>                        
+                        </div>
+                    )
+                }))}
+                  { filterData?.colorFilter.length !==0 && (filterData?.colorFilter.map((items)=>{
+                    return(
+                        <div key={items} className='py-1 px-3 h-min rounded-lg border-2 flex items-center'>
+                            {items} 
+                            <RxCross2 className='ml-2' onClick={()=>{
+                                let newCategoryFilter=filterData.colorFilter.filter(item=>item !=items)
+                                setFilters({...filterData,colorFilter : newCategoryFilter})
+                              }
+                              }/>
+                        </div>
+                    )
+                }))}
+                </div>
+              
+            </div>
+            <div className='py-1 ml-5 mr-5 px-3 h-min rounded-lg border-2 flex items-center'><p className='whitespace-nowrap'>SORT BY</p><RxPlus className=' ml-2'/>
+            </div>
+        </div>
+
+          <div className='w-full mt-5 flex justify-between  items-center'>
+              <p>Showing {limitedItems.length} out of {Number(totalProduct)} products</p>
+          </div>
+
+          <div className='mt-6 flex flex-wrap justify-normal gap-x-8 gap-y-2 mx-auto px-6'>
+          {limitedItems && limitedItems.map((items,i)=>{
+              if (props.category===items.gender)
+              {
+                console.log("items is ::",items)
+              //unique key is needed to solve the issue of haveing both page having same saved
+              return <Items key={items.productname} id={items._id} name={items.productname} description={items.description} image={items.image} new_price={items.price - 0.15* items.price} old_price={items.price} saved={savedItems.includes(items._id)?true:false} />
+              }
+            })}
+          </div>
         </div>
       </div>
-      <div className='mt-6 ml-7 flex flex-wrap gap-x-20 gap-y-2 mx-auto px-20'>
-      {limitedItems && limitedItems.map((items,i)=>{
-          if (props.category===items.gender)
-          {
-            console.log("items is ::",items)
-          //unique key is needed to solve the issue of haveing both page having same saved
-          return <Items key={items.productname} id={items._id} name={items.productname} description={items.description} image={items.image} new_price={items.price - 0.15* items.price} old_price={items.price} saved={savedItems.includes(items._id)?true:false} />
-          }
-        })}
-      </div>
+
       <div className='mt-20 px-8 py-3 rounded-full bg-slate-300'>
         Explore more
       </div>
