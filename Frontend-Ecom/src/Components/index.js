@@ -8,7 +8,7 @@ import Login from "./Login";
 import Navbar from "./Navbar";
 import NewAddproduct from "./NewAddproduct";
 import NewCollections from "./NewCollections";
-import NewsLetter from './NewsLetter';
+import NewsLetter from "./NewsLetter";
 import Offers from "./Offers";
 import Popular from "./Popular";
 import ProductDisplay from "./ProductDisplay";
@@ -33,5 +33,5 @@ export {
     ProductDisplay,
     QuestionForm,
     ReviewForm,
-    Signup
-}
+    Signup,
+};

@@ -1,12 +1,12 @@
-import React from 'react'
-import FileUploader from '../Components/NewAddproduct'
+import React from "react";
+import FileUploader from "../Components/NewAddproduct";
 
 function AddProduct() {
-  return (
-    <div>
-        <FileUploader/>
-    </div>
-  )
+    return (
+        <div>
+            <FileUploader />
+        </div>
+    );
 }
 
-export default AddProduct
+export default AddProduct;
