@@ -69,7 +69,7 @@ function Filter({ filters, onFilterChange }) {
     };
 
     return (
-        <div className="w-full ml-5 p-4 space-y-6 flex flex-col items-center rounded-2xl border-2 select-none ">
+        <div className="w-full ml-5 p-4 space-y-6 flex flex-col items-center rounded-2xl shadow-xl bg-neutral-100 select-none ">
             <p className="text-left w-full text-2xl font-semibold">Filter</p>
 
             <div className="w-full ">

@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
-import Breadcrum from "../Components/Breadcrum";
 import ProductDisplay from "../Components/ProductDisplay";
-import axios from "axios";
 import { getProduct } from "../appwrite/productConfig";
 import { getImages } from "../appwrite/imagencolorConfig";
 

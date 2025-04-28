@@ -37,14 +37,13 @@ function Items(props) {
         <div className="w-60  mt-4 shadow-lg rounded-2xl overflow-hidden relative select-none">
             <Link to={`/product/${props._id || props.id}`}>
                 {/* Image Container with Label */}
+                {console.log("Inside the shop for ",props)}
                 <div className="relative">
                     <img
                         className="rounded-2xl w-full h-60 object-cover hover:scale-105 transition-transform duration-300"
                         alt={props.title}
                         src={
-                            props.image[0].image[0].includes("/")
-                                ? props.image[0].image[0]
-                                : null
+                            props.id.length>7?(props.image[0].image[0].includes("/") ? props.image[0].image[0] : null):(props.image)
                             // : dbService.getFilePreview(props.image)
                         }
                     />

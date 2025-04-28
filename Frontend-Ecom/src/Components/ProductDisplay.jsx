@@ -32,7 +32,7 @@ function ProductDisplay({ product }) {
     const [size, setSize] = useState("");
     const [currentUserName, setUserName] = useState();
     const [currentImage, setCurrentImage] = useState(product.image[0].image[0]);
-    const [currentColor, setCurrentColor] = useState();
+    const [currentColor, setCurrentColor] = useState(0);
 
     console.log("Props value is ", product);
     function upperCase(str) {
@@ -234,7 +234,7 @@ function ProductDisplay({ product }) {
 
     return (
         <div className="w-screen">
-            {/* {||||||||||||||||||||||||||||||||||||||||||||***** Left section ( images ) *****|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||} */}
+{/* {||||||||||||||||||||||||||||||||||||||||||||***** Left section ( images ) *****|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||} */}
 
             <div className="mt-10 flex w-full justify-center gap-0 font-mono">
                 <div className="flex self-start w-5/12 gap-6 mt-10 ">
@@ -242,6 +242,7 @@ function ProductDisplay({ product }) {
                         {/* {console.log("Images in the product are :",product.image[1].image[0])} */}
                         {[...Array(product.image.length)].map((_, index) => (
                             <div
+                                key={index}
                                 className="size-24 mb-3 shadow-xl rounded-sm overflow-hidden flex items-center justify-center cursor-pointer"
                                 onClick={() =>
                                     setCurrentImage(
@@ -269,14 +270,14 @@ function ProductDisplay({ product }) {
                     </div>
                 </div>
 
-                {/* {||||||||||||||||||||||||||||||||||||||||||||***** Right section ( Product information) *****|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||} */}
+{/* {||||||||||||||||||||||||||||||||||||||||||||***** Right section ( Product information) *****|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||} */}
 
                 <div className="flex flex-col text-left w-5/12 justify-items-start">
-                    {/* {****************************  Breadcrum  ****************************} */}
+{/* {****************************  Breadcrum  ****************************} */}
 
                     <Breadcrum product={product} />
 
-                    {/* {****************************  Detail Information  ****************************} */}
+{/* {****************************  Detail Information  ****************************} */}
 
                     <div className="flex items-center justify-between mt-4 ">
                         <p className="font-semibold text-3xl">
@@ -306,7 +307,7 @@ function ProductDisplay({ product }) {
                     </div>
 
                     <div className="mt-10 flex items-end gap-28">
-                        {console.log("Colors are :", product.image[1].color)}
+                        {console.log("Colors are :", product.image[0].color)}
                         <p className="">
                             Color:{" "}
                             {product.image.map((items, indx) =>
@@ -331,7 +332,7 @@ function ProductDisplay({ product }) {
                         ))}
                     </div>
 
-                    {/* {****************************  Selecting Size  ****************************} */}
+{/* {****************************  Selecting Size  ****************************} */}
 
                     <p className="font-semibold text-lg">Select Size</p>
                     <ul className="flex gap-4 mt-6 text-center">
@@ -385,7 +386,7 @@ function ProductDisplay({ product }) {
                         )}
                     </ul>
 
-                    {/* {****************************  Adding to Cart  ****************************} */}
+{/* {****************************  Adding to Cart  ****************************} */}
 
                     <div className="flex items-end gap-4">
                         <div className="flex items-center justify-center gap-2 select-none">
@@ -418,7 +419,7 @@ function ProductDisplay({ product }) {
                         </button>
                     </div>
 
-                    {/* {****************************  Basic Informations  ****************************} */}
+{/* {****************************  Basic Informations  ****************************} */}
 
                     <div className="mt-10 mb-2 font-poppins">
                         <p className="font-bold text-xl mb-2 ">
@@ -481,7 +482,7 @@ function ProductDisplay({ product }) {
                 </div>
             </div>
 
-            {/* {||||||||||||||||||||||||||||||||||||||||||||***** Bottom section ( Question and Answers ) *****||||||||||||||||||||||||||||||||||||||||||||||||||||||||} */}
+{/* {||||||||||||||||||||||||||||||||||||||||||||***** Bottom section ( Question and Answers ) *****||||||||||||||||||||||||||||||||||||||||||||||||||||||||} */}
 
             <div className="w-full mt-10 justify-start ">
                 <div className="text-2xl w-full text-left ">
@@ -507,7 +508,7 @@ function ProductDisplay({ product }) {
                     onSubmit={handleQuestionSubmit}
                 />
                 <div className="ml-10 justify-items-start">
-                    {/* {****************************  QnAs ****************************} */}
+{/* {****************************  QnAs ****************************} */}
 
                     {/* {[...Array(noOfQ)].map((_,index)=>( */}
                     {QnA &&
@@ -577,7 +578,7 @@ function ProductDisplay({ product }) {
                                         ))}
                                 </div>
 
-                                {/* {****************************  Editing Questions  ****************************} */}
+{/* {****************************  Editing Questions  ****************************} */}
 
                                 <div className="mt-4 mb-4">
                                     <div className="flex items-center">
@@ -612,7 +613,7 @@ function ProductDisplay({ product }) {
                 </div>
             </div>
 
-            {/* {||||||||||||||||||||||||||||||||||||||||||||***** Bottom section ( Rating and Reviews ) *****||||||||||||||||||||||||||||||||||||||||||||||||||||||||} */}
+{/* {||||||||||||||||||||||||||||||||||||||||||||***** Bottom section ( Rating and Reviews ) *****||||||||||||||||||||||||||||||||||||||||||||||||||||||||} */}
 
             <div className="w-full mt-10 justify-start px-10">
                 <div className="text-2xl w-full text-left ">
@@ -679,7 +680,7 @@ function ProductDisplay({ product }) {
                 </div>
 
                 <div>
-                    {/* {****************************  Reviews  ****************************} */}
+{/* {****************************  Reviews  ****************************} */}
 
                     {/* {[...Array(noOfR)].map((_,index)=>( */}
                     {Reviews &&

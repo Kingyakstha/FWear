@@ -4,6 +4,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { logout as authLogout } from "../Context/authSlice";
 import { userLogout } from "../appwrite/authentication";
+import { IoLogOutOutline,IoLogInOutline } from "react-icons/io5";
+
 
 function Navbar() {
     const dispatch = useDispatch();
@@ -73,7 +75,7 @@ function Navbar() {
             </ul>
             <div className="w-1/3 flex items-center justify-center gap-2">
                 <p className="text-2xl font-medium text-[#171717]">
-                    FashionWears
+                    <span className="text-[#d30b2d] font-Playwrite font-bold">Fashion</span><span className="font-Kanchenjunga">Wears</span>
                 </p>
             </div>
 
@@ -98,29 +100,35 @@ function Navbar() {
                 </div>
                 {status === false ? (
                     <Link to="/login">
-                        <button className="bg-white w-20 h-8 border-[#717171] rounded-3xl border-2 text-[#515151] text-base font-medium">
+                        <button
+                                className="flex items-center pl-2 gap-1 bg-white w-24 h-8 border-[#717171] rounded-lg border text-[#515151] hover:bg-red-500 hover:text-white  cursor-pointer text-base font-medium"
+                        >
+                            <IoLogInOutline className="size-5" />
+
                             Login
                         </button>
                     </Link>
                 ) : (
-                    <div className="flex items-center gap-4">
-                        <Link to="/">
-                            <button
-                                className="bg-white w-20 h-8 border-[#717171] rounded-3xl border text-[#515151] text-base font-medium"
-                                onClick={async () => {
-                                    const response = await userLogout();
-                                    if (response) dispatch(authLogout());
-                                }}
-                            >
-                                Logout
-                            </button>
-                        </Link>
+                    <div className="flex items-center gap-2">
                         <Link to="/cart">
                             <FiShoppingCart className="w-12 h-6 cursor-pointer" />
                         </Link>
                         {/* <div className='size-6 content-center items-center -mt-[35px] -ml-[60px] bg-red-600 text-white rounded-2xl text-sm'>{prod_arr.length}</div> */}
                         <Link to={"/addproduct"}>
                             <FiPlusCircle className="w-12 h-6 cursor-pointer" />
+                        </Link>
+                        <Link to="/">
+                            <button
+                                className="flex items-center pl-2 gap-1 bg-white w-24 h-8 border-[#717171] rounded-lg border text-[#515151] hover:bg-red-500 hover:text-white  cursor-pointer text-base font-medium"
+                                onClick={async () => {
+                                    const response = await userLogout();
+                                    if (response) dispatch(authLogout());
+                                }}
+                            >
+                                <IoLogOutOutline className="size-5"/>
+
+                                Logout
+                            </button>
                         </Link>
                     </div>
                 )}

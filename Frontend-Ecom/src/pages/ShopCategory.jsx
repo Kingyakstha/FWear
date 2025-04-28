@@ -29,23 +29,21 @@ function ShopCategory(props) {
 
     const status = useSelector((state) => state.auth.status);
 
+
+// Get all the products and their images
     useEffect(() => {
         async function fetchProduct() {
             setPage(0);
             try {
                 const products = await getGenderBasedProduct(props.category);
                 // const response= await axios.get(`http://localhost:8000/api/v1/products/get-product-gender/${props.category}`)
-
                 const productWithImage = await Promise.all(
                     products.map(async (prod) => {
                         try {
                             const response = await getImages(prod._id);
                             // const response= await axios.get(`http://localhost:8000/api/v1/images/getImages/${prod._id}`)
-                            console.log(
-                                "Response for the image is ",
-                                response[0].color
-                            );
-                            //correction needed
+                            console.log( "Response for the image is ", response[0].color );
+                            //correction needed (done)
                             if (response) {
                                 const image = response[0].color;
                                 if (image) {
@@ -58,17 +56,15 @@ function ShopCategory(props) {
                                 return null;
                             }
                         } catch (error) {
-                            console.log(
-                                "Error occured while fetching the images or image doesn't exist",
-                                error
-                            );
+                            console.log( "Error occured while fetching the images or image doesn't exist",error);
                             return null;
                         }
                     })
                 );
+
+//Products which contains image/s
                 const validProduct = productWithImage.filter(
-                    (items) => items !== null
-                );
+                    (items) => items !== null);
                 setProd_item(validProduct);
             } catch (error) {
                 console.log("Error occured while fetching", error);
@@ -77,6 +73,7 @@ function ShopCategory(props) {
         fetchProduct();
     }, [props]);
 
+// Get all the saved products by the user
     useEffect(() => {
         async function fetchSavedProducts() {
             setTotal(prod_item.length);
@@ -87,10 +84,7 @@ function ShopCategory(props) {
             setLimitedItems(items);
             console.log("Limited items are ", limitedItems);
 
-            console.log(
-                `Status is ${status} and limited products are `,
-                limitedItems
-            );
+            console.log( `Status is ${status} and limited products are `, limitedItems );
 
             if (status) {
                 const saved = await getSavedProduct();
@@ -99,14 +93,16 @@ function ShopCategory(props) {
                     return items.productid;
                 });
                 console.log("saved array is :", savedArray);
+// Add all the id of product which is saved by user
                 setSavedItems(savedArray);
             }
         }
         fetchSavedProducts();
     }, [page, prod_item]);
 
-    const sortOptions = ["Recommended", "New", "Best Seller", "Price"];
+    // const sortOptions = ["Recommended", "New", "Best Seller", "Price"];
 
+// All the filter category and their state in array 
     const [filterData, setFilters] = useState({
         categoryFilter: [],
         sizeFilter: [],
@@ -114,6 +110,7 @@ function ShopCategory(props) {
         priceFilter: [],
     });
 
+// Receives the changes sent by child and updates the "filterData"
     const handleFilterChange = (newFilters) => {
         setFilters(newFilters);
     };
@@ -123,13 +120,18 @@ function ShopCategory(props) {
     // },[filterData])
 
     return (
-        // (props.category==='men'?
         <div className="w-screen flex flex-col items-center mt-4">
+
+{/* {*******************************************************  Banner  *******************************************************} */}
+
             <div className="flex">
                 <img className="mt-9" src={props.banner}></img>
             </div>
 
             <div className="w-full flex">
+
+{/* {*******************************************************  Filter SideBar  *******************************************************} */}
+
                 <div className="w-1/5 mt-4 mr-10">
                     <Filter
                         filters={filterData}
@@ -137,7 +139,13 @@ function ShopCategory(props) {
                     />
                 </div>
                 <div className="w-4/5">
+
+{/* {*******************************************************  Filter and Sort  *******************************************************} */}
+
                     <div className="w-full h-min mt-4 flex justify-between">
+
+{/* {***************************************  Filter  ******************************************} */}
+
                         <div className="flex space-x-2 h-min">
                             <div className="py-1 px-3 h-min rounded-lg border-2 flex items-center bg-black text-white">
                                 FILTERS
@@ -155,16 +163,10 @@ function ShopCategory(props) {
                                                 <RxCross2
                                                     className="ml-2"
                                                     onClick={() => {
-                                                        let newCategoryFilter =
-                                                            filterData.categoryFilter.filter(
-                                                                (item) =>
-                                                                    item !=
-                                                                    items
-                                                            );
+                                                        let newCategoryFilter = filterData.categoryFilter.filter((item) => item !=items );
                                                         setFilters({
                                                             ...filterData,
-                                                            categoryFilter:
-                                                                newCategoryFilter,
+                                                            categoryFilter:newCategoryFilter,
                                                         });
                                                     }}
                                                 />
@@ -182,12 +184,7 @@ function ShopCategory(props) {
                                                 <RxCross2
                                                     className="ml-2"
                                                     onClick={() => {
-                                                        let newCategoryFilter =
-                                                            filterData.sizeFilter.filter(
-                                                                (item) =>
-                                                                    item !=
-                                                                    items
-                                                            );
+                                                        let newCategoryFilter = filterData.sizeFilter.filter((item) => item !=items);
                                                         setFilters({
                                                             ...filterData,
                                                             sizeFilter:
@@ -209,16 +206,10 @@ function ShopCategory(props) {
                                                 <RxCross2
                                                     className="ml-2"
                                                     onClick={() => {
-                                                        let newCategoryFilter =
-                                                            filterData.colorFilter.filter(
-                                                                (item) =>
-                                                                    item !=
-                                                                    items
-                                                            );
+                                                        let newCategoryFilter = filterData.colorFilter.filter((item) => item !=items);
                                                         setFilters({
                                                             ...filterData,
-                                                            colorFilter:
-                                                                newCategoryFilter,
+                                                            colorFilter:newCategoryFilter,
                                                         });
                                                     }}
                                                 />
@@ -227,6 +218,8 @@ function ShopCategory(props) {
                                     })}
                             </div>
                         </div>
+
+{/* {****************************************  Sort *********************************************} */}
 
                         <div
                             className="py-1 ml-24 mr-5 px-3 h-min relative cursor-pointer select-none"
@@ -238,41 +231,43 @@ function ShopCategory(props) {
                             </div>
 
                             {sortClicked && (
-                                <div className="absolute w-52 mt-2 -left-20 z-20 py-2 shadow-xl border-1 rounded-lg bg-white text-gray-500 select-none">
+                                <div className="absolute w-52 mt-2 -left-20 z-20 py-2 shadow-xl border-1 rounded-lg bg-white text-gray-600 select-none">
                                     <p
                                         className="whitespace-nowrap flex items-center w-full px-3 py-1 hover:bg-gray-200"
                                         onClick={() => setSort("limited")}
                                     >
-                                        Limited edition{" "}
+                                        Limited edition
                                     </p>
                                     <p
                                         className="whitespace-nowrap flex items-center w-full px-3 py-1 hover:bg-gray-200"
                                         onClick={() => setSort("popular")}
                                     >
-                                        Popularity{" "}
+                                        Popularity
                                     </p>
                                     <p
                                         className="whitespace-nowrap flex items-center w-full px-3 py-1 hover:bg-gray-200"
                                         onClick={() => setSort("high")}
                                     >
-                                        Price High to Low{" "}
+                                        Price High to Low
                                     </p>
                                     <p
                                         className="whitespace-nowrap flex items-center w-full px-3 py-1 hover:bg-gray-200"
                                         onClick={() => setSort("low")}
                                     >
-                                        Price Low to High{" "}
+                                        Price Low to High
                                     </p>
                                     <p
                                         className="whitespace-nowrap flex items-center w-full px-3 py-1 hover:bg-gray-200"
                                         onClick={() => setSort("new")}
                                     >
-                                        New{" "}
+                                        New
                                     </p>
                                 </div>
                             )}
                         </div>
                     </div>
+
+{/* {****************************************  Showing  *********************************************} */}
 
                     <div className="w-full mt-5 flex justify-between  items-center">
                         <p>
@@ -280,6 +275,8 @@ function ShopCategory(props) {
                             {Number(totalProduct)} products
                         </p>
                     </div>
+
+{/* {*******************************************************  Products  *******************************************************} */}
 
                     <div className="mt-6 flex flex-wrap justify-normal gap-x-8 gap-y-2 mx-auto px-6">
                         {limitedItems &&
@@ -294,15 +291,9 @@ function ShopCategory(props) {
                                             name={items.productname}
                                             description={items.description}
                                             image={items.image}
-                                            new_price={
-                                                items.price - 0.15 * items.price
-                                            }
+                                            new_price={ items.price - 0.15 * items.price }
                                             old_price={items.price}
-                                            saved={
-                                                savedItems.includes(items._id)
-                                                    ? true
-                                                    : false
-                                            }
+                                            saved={ savedItems.includes(items._id)? true : false }
                                         />
                                     );
                                 }
@@ -314,6 +305,9 @@ function ShopCategory(props) {
             {/* <div className='mt-20 px-8 py-3 rounded-full bg-slate-300'>
         Explore more
       </div> */}
+
+{/* {*******************************************************  Pagination  *******************************************************} */}
+
             <div className="flex justify-items-center space-x-3 mt-2">
                 <IoIosArrowBack
                     className="rounded-lg  bg-white border-1 border-neutral-300 size-8 p-2 cursor-pointer"
@@ -332,6 +326,11 @@ function ShopCategory(props) {
                 />
             </div>
         </div>
+    );
+}
+
+export default ShopCategory;
+
 
         //for testing purpose
         // :
@@ -370,7 +369,3 @@ function ShopCategory(props) {
         //     </div>
         // 0     1     2
         // </div>)   0-2   2-4  4-6 ....
-    );
-}
-
-export default ShopCategory;
