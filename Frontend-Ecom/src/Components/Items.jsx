@@ -5,7 +5,7 @@ import { FaHeart } from "react-icons/fa";
 import { saveProduct, unsaveProduct } from "../appwrite/saveConfig";
 
 function Items(props) {
-    console.log("Key of this item is ", props);
+    // console.log("Key of this item is ", props);
     const [product, setProduct] = useState(props);
     const [save, setSave] = useState(product.saved);
     // console.log("saved while passing props", props.saved," name ",props.name)
@@ -37,7 +37,7 @@ function Items(props) {
         <div className="w-60  mt-4 shadow-lg rounded-2xl overflow-hidden relative select-none">
             <Link to={`/product/${props._id || props.id}`}>
                 {/* Image Container with Label */}
-                {console.log("Inside the shop for ",props)}
+                {/* {console.log("Inside the shop for ",props)} */}
                 <div className="relative">
                     <img
                         className="rounded-2xl w-full h-60 object-cover hover:scale-105 transition-transform duration-300"

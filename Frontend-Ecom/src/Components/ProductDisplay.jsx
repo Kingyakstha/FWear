@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { addToCart } from "../Context/shopSlice";
 import { useDispatch } from "react-redux";
 import Breadcrum from "./Breadcrum";
+import { AiOutlineStar, AiFillStar } from "react-icons/ai";
+
 import { FiStar } from "react-icons/fi";
 import { RiCheckboxBlankCircleFill } from "react-icons/ri";
 import { BiMessageAdd } from "react-icons/bi";
@@ -279,34 +281,40 @@ function ProductDisplay({ product }) {
 
 {/* {****************************  Detail Information  ****************************} */}
 
-                    <div className="flex items-center justify-between mt-4 ">
+                    <div className="flex items-center gap-14 mt-4 ">
                         <p className="font-semibold text-3xl">
                             {upperCase(product.productname)}
                         </p>
-                        <div className="mt-4 flex gap-6 items-end">
-                            <p className="text-[#8c8c8c] text-lg font-semibold line-through">
+                        <div className=" flex gap-6 items-baseline">
+                            <p className="text-[#8c8c8c] text-sm font-semibold line-through">
                                 $ {product.price}
                             </p>
-                            <p className=" text-lg text-red-500 font-semibold">
+                            <p className=" text-2xl text-red-500 font-semibold">
                                 $ {product.price - 0.15 * product.price}
                             </p>
                         </div>
                     </div>
-                    <div className="flex mt-1 gap-1 items-center ">
+                    <div className="flex mt-3 items-center ">
+
+                        {/* <FiStar className="size-5 text-red-400" />
+                        <FiStar className="size-5 text-red-400" />
+                        <FiStar className="size-5 text-red-400" />
+                        <FiStar className="size-5 text-red-400" />
+                        <FiStar className="size-5 text-red-400" /> */}
+                        { [...Array(5)].map((_,indx)=>{
+                                if (indx<stars) return <AiFillStar className="size-5 text-red-400" />
+                                else return <AiOutlineStar className="size-5 text-red-400" />
+                        })}
+{/*                         
                         <p className="text-lg text-gray-600 mr-3">
                             {stars || 0}
-                        </p>
-                        <FiStar className="size-5 text-red-400" />
-                        <FiStar className="size-5 text-red-400" />
-                        <FiStar className="size-5 text-red-400" />
-                        <FiStar className="size-5 text-red-400" />
-                        <FiStar className="size-5 text-red-400" />
+                        </p> */}
                         <p className="text-[#8c8c8c] ml-3">
-                            ({Reviews && Reviews.length})
+                            {Reviews && Reviews.length}  reviews
                         </p>
                     </div>
 
-                    <div className="mt-10 flex items-end gap-28">
+                    <div className="mt-8 flex items-end gap-28">
                         {console.log("Colors are :", product.image[0].color)}
                         <p className="">
                             Color:{" "}

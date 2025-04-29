@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import dropdown_icon from "../Components/Assets/dropdown_icon.png";
 import { Items } from "../Components";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { RxCross2, RxPlus } from "react-icons/rx";
 
 // import dbService from '../appwrite/config'
 // import {Query} from 'appwrite'
-import { IoIosArrowDown } from "react-icons/io";
+// import { IoIosArrowDown } from "react-icons/io";
 import { getSavedProduct } from "../appwrite/saveConfig";
 import { getGenderBasedProduct } from "../appwrite/productConfig";
 import { getImages } from "../appwrite/imagencolorConfig";
@@ -57,6 +56,7 @@ function ShopCategory(props) {
                         try {
                             const response = await getImages(prod._id);
                             // const response= await axios.get(`http://localhost:8000/api/v1/images/getImages/${prod._id}`)
+                            
                             console.log( "Response for the image is ", response[0].color );
                             //correction needed (done)
                             if (response) {
@@ -81,7 +81,7 @@ function ShopCategory(props) {
                 const validProduct = productWithImage.filter(
                     (items) => items !== null);
                 setProd_item(validProduct);
-                console.log("Valid product :",validProduct," product with image :",productWithImage)
+                // console.log("Valid product :",validProduct," product with image :",productWithImage)
             } catch (error) {
                 console.log("Error occured while fetching", error);
             }
@@ -95,29 +95,31 @@ function ShopCategory(props) {
         async function fetchSavedProducts() {
             setTotal(prod_item.length);
 
-            console.log("The length of prod_item:", totalProduct);
+            // console.log("The length of prod_item:", totalProduct);
 
 // Paginated products adding in "limitedItems" "filteredItems"
             const items = prod_item.slice(page * limit, limit * (page + 1));
             setLimitedItems(items);
             setFilteredItems(items)
-            console.log("Limited items are ", limitedItems);
+            // console.log("Limited items are ", limitedItems);
 
-            console.log( `Status is ${status} and limited products are `, limitedItems );
+            // console.log( `Status is ${status} and limited products are `, limitedItems );
 
             if (status) {
                 const saved = await getSavedProduct();
-                console.log("saved is :", saved);
+                // console.log("saved is :", saved);
                 const savedArray = saved.data.map((items) => {
                     return items.productid;
                 });
-                console.log("saved array is :", savedArray);
+                // console.log("saved array is :", savedArray);
 // Add all the id of product which is saved by user
                 setSavedItems(savedArray);
             }
         }
         fetchSavedProducts();
     }, [page, prod_item]);
+
+
 
     useEffect(()=>{
         // console.log("All the limited items are  ::",limitedItems)
@@ -201,14 +203,36 @@ function ShopCategory(props) {
                     (filterData.colorFilter.length >0?colorFilteredItems.includes(items):true) && 
                     (filterData.priceFilter.length >0?priceFilteredItems.includes(items):true))
 
-            console.log('total are ',total)
+            // console.log('total are ',total)
         setFilteredItems(total)
 
     },[filterData])
 
 
+    useEffect(()=>{
+        // console.log( "hello sort changed",sortType)
+        const sortedProducts = [...filteredItems].sort((a, b) => {
+            switch (sortType) {
+                case 'low_to_high':
+                    return a.price - b.price;
+                case 'high_to_low':
+                    return b.price - a.price;
+                case 'new':
+                    return new Date(a.updatedAt) - new Date(b.updatedAt);
+                // case 'popular':
+                //     return b.sold - a.sold; 
+                // case 'limited':
+                //     return a.stock -b.stock;
+                default:
+                return 0; // no sorting or based on internal score
+            }
+          });
+        
+        // console.log("Sorted products are", sortedProducts)
+        setFilteredItems(sortedProducts)
+    },[sortType])
 
-    // const sortOptions = ["Recommended", "New", "Best Seller", "Price"];
+    // const sortOptions = ["high","low", "new", "popular", "limited"];
 
     // useEffect(()=>{
     //   console.log("Received filter data is :",filterData?.colorFilter.length !==0 && 6)
@@ -330,31 +354,31 @@ function ShopCategory(props) {
                             {sortClicked && (
                                 <div className="absolute w-52 mt-2 -left-20 z-20 py-2 shadow-xl border-1 rounded-lg bg-white text-gray-600 select-none">
                                     <p
-                                        className="whitespace-nowrap flex items-center w-full px-3 py-1 hover:bg-gray-200"
+                                        className={`whitespace-nowrap flex items-center w-full px-3 py-1 ${sortType && sortType=='limited'?'bg-blue-300':'hover:bg-gray-200'} `}
                                         onClick={() => setSort("limited")}
                                     >
                                         Limited edition
                                     </p>
                                     <p
-                                        className="whitespace-nowrap flex items-center w-full px-3 py-1 hover:bg-gray-200"
+                                        className={`whitespace-nowrap flex items-center w-full px-3 py-1 ${sortType && sortType=='popular'?'bg-blue-300':'hover:bg-gray-200'} `}
                                         onClick={() => setSort("popular")}
                                     >
                                         Popularity
                                     </p>
                                     <p
-                                        className="whitespace-nowrap flex items-center w-full px-3 py-1 hover:bg-gray-200"
-                                        onClick={() => setSort("high")}
+                                        className={`whitespace-nowrap flex items-center w-full px-3 py-1 ${sortType && sortType=='high_to_low'?'bg-blue-300':'hover:bg-gray-200'} `}
+                                        onClick={() => setSort("high_to_low")}
                                     >
                                         Price High to Low
                                     </p>
                                     <p
-                                        className="whitespace-nowrap flex items-center w-full px-3 py-1 hover:bg-gray-200"
-                                        onClick={() => setSort("low")}
+                                        className={`whitespace-nowrap flex items-center w-full px-3 py-1 ${sortType && sortType=='low_to_high'?'bg-blue-300':'hover:bg-gray-200'} `}
+                                        onClick={() => setSort("low_to_high")}
                                     >
                                         Price Low to High
                                     </p>
                                     <p
-                                        className="whitespace-nowrap flex items-center w-full px-3 py-1 hover:bg-gray-200"
+                                        className={`whitespace-nowrap flex items-center w-full px-3 py-1 ${sortType && sortType=='new'?'bg-blue-300':'hover:bg-gray-200'} `}
                                         onClick={() => setSort("new")}
                                     >
                                         New
@@ -383,7 +407,7 @@ function ShopCategory(props) {
                         {filteredItems &&
                             filteredItems.map((items, i) => {
                                 if (props.category === items.gender) {
-                                    console.log("items is ::", items);
+                                    // console.log("items is ::", items);
                                     //unique key is needed to solve the issue of haveing both page having same saved
                                     return (
                                         <Items
