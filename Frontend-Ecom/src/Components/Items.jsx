@@ -49,7 +49,7 @@ function Items(props) {
                     />
                     {/* Label */}
                     <div className="absolute top-0 left-0 bg-lime-600 text-white text-sm font-semibold px-3 py-1 rounded-tl-lg">
-                        {props.label || "New"}{" "}
+                        {props.label || "New"}
                         {/* Use dynamic label from props */}
                     </div>
                 </div>

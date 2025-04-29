@@ -309,7 +309,7 @@ function ProductDisplay({ product }) {
                         <p className="text-lg text-gray-600 mr-3">
                             {stars || 0}
                         </p> */}
-                        <p className="text-[#8c8c8c] ml-3">
+                        <p className="text-[#8c8c8c] ml-5">
                             {Reviews && Reviews.length}  reviews
                         </p>
                     </div>
@@ -347,7 +347,7 @@ function ProductDisplay({ product }) {
                         {product.availablesizes.includes("XS") && (
                             <li
                                 onClick={() => setSize("XS")}
-                                className={`${size === "XS" ? "bg-red-400 text-white" : "bg-slate-100"} size-12 place-content-center cursor-pointer`}
+                                className={`${size === "XS" ? "bg-red-400 text-white rounded-lg " : "bg-slate-100"} size-12 place-content-center cursor-pointer`}
                             >
                                 XS
                             </li>
@@ -355,7 +355,7 @@ function ProductDisplay({ product }) {
                         {product.availablesizes.includes("S") && (
                             <li
                                 onClick={() => setSize("S")}
-                                className={`${size === "S" ? "bg-red-400 text-white" : "bg-slate-100"} size-12 place-content-center cursor-pointer`}
+                                className={`${size === "S" ? "bg-red-400 text-white rounded-lg" : "bg-slate-100"} size-12  place-content-center cursor-pointer`}
                             >
                                 S
                             </li>
@@ -363,7 +363,7 @@ function ProductDisplay({ product }) {
                         {product.availablesizes.includes("M") && (
                             <li
                                 onClick={() => setSize("M")}
-                                className={`${size === "M" ? "bg-red-400 text-white" : "bg-slate-100"} size-12 place-content-center cursor-pointer`}
+                                className={`${size === "M" ? "bg-red-400 text-white rounded-lg " : "bg-slate-100"} size-12 place-content-center cursor-pointer`}
                             >
                                 M
                             </li>
@@ -371,7 +371,7 @@ function ProductDisplay({ product }) {
                         {product.availablesizes.includes("L") && (
                             <li
                                 onClick={() => setSize("L")}
-                                className={`${size === "L" ? "bg-red-400 text-white" : "bg-slate-100"} size-12 place-content-center cursor-pointer`}
+                                className={`${size === "L" ? "bg-red-400 text-white rounded-lg " : "bg-slate-100"} size-12 place-content-center cursor-pointer`}
                             >
                                 L
                             </li>
@@ -379,7 +379,7 @@ function ProductDisplay({ product }) {
                         {product.availablesizes.includes("XL") && (
                             <li
                                 onClick={() => setSize("XL")}
-                                className={`${size === "XL" ? "bg-red-400 text-white" : "bg-slate-100"} size-12 place-content-center cursor-pointer`}
+                                className={`${size === "XL" ? "bg-red-400 text-white rounded-lg " : "bg-slate-100"} size-12 place-content-center cursor-pointer`}
                             >
                                 XL
                             </li>
@@ -387,7 +387,7 @@ function ProductDisplay({ product }) {
                         {product.availablesizes.includes("XXL") && (
                             <li
                                 onClick={() => setSize("XXL")}
-                                className={`${size === "XXL" ? "bg-red-400 text-white" : "bg-slate-100"} size-12 place-content-center cursor-pointer`}
+                                className={`${size === "XXL" ? "bg-red-400 text-white rounded-lg " : "bg-slate-100"} size-12 place-content-center cursor-pointer`}
                             >
                                 XXL
                             </li>
@@ -523,7 +523,7 @@ function ProductDisplay({ product }) {
                         QnA.map((items) => (
                             <div
                                 key={items._id}
-                                className={`w-2/3  shadow-sm p-6 mb-4 rounded-lg border-l-4 select-none ${items.answer ? `border-green-500 bg-[#def7f2]` : `border-gray-500 bg-[#e9eaec]`}`}
+                                className={`w-2/3  shadow-sm py-2 px-4 mb-4 rounded-lg border-l-4 select-none ${items.answer ? `border-green-500 bg-[#dcf6e8]` : `border-gray-500 bg-[#f1f5f5]`}`}
                             >
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center justify-start ">
@@ -635,7 +635,7 @@ function ProductDisplay({ product }) {
                         <div className="flex gap-1 items-center ">
                             <p className="text-2xl font-extrabold mr-4">
                                 {" "}
-                                {stars}
+                                {stars || 0}
                             </p>
                             {[...Array(5)].map((_) => (
                                 <FaStar className=" size-6 text-yellow-400" />
@@ -686,6 +686,16 @@ function ProductDisplay({ product }) {
                         onSubmit={(e) => handleReviewSubmit(e)}
                     />
                 </div>
+                {Reviews?.length==0 && (<div className="w-full flex flex-col items-center">
+                <div className="w-1/2 flex flex-col items-center py-4  gap-4 shadow-xl bg-gray-50 rounded-xl">
+                <div className="rounded-full bg-blue-100 p-3">
+                <BiMessageAdd className="size-10  text-blue-500 hover:rotate-4" />
+                </div>
+                    <p className="text-2xl text-gray-800 mt-4">No Review yet...</p>
+                    <p className="text-lg text-gray-500 mb-4">Be the first to review this product</p>
+                </div>
+                </div> )}
+             
 
                 <div>
 {/* {****************************  Reviews  ****************************} */}
