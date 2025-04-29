@@ -1,9 +1,10 @@
 import {Router} from "express"
-import { addProduct, deleteProduct, getProduct, getProductCategory, getProductGender, updateProduct } from "../controller/product.controller.js"
+import { addProduct,addMultipleProducts, deleteProduct, getProduct, getProductCategory, getProductGender, updateProduct } from "../controller/product.controller.js"
 
 const router=Router()
 
 router.route("/add-product").post(addProduct)
+router.route("/add-multipleproduct").post(addMultipleProducts)
 router.route("/delete-product/:productid").post(deleteProduct)
 router.route("/edit-product/:productid").patch(updateProduct)
 

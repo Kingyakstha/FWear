@@ -43,6 +43,63 @@ const addProduct= asyncHandler( async (req, res)=>{
         new ApiResponse(200, product,"Product successfully created")
     )
 })
+const addMultipleProducts = asyncHandler(async (req, res) => {
+    const products = req.body.products; // expecting an array of product objects
+  
+    if (!Array.isArray(products) || products.length === 0) {
+      throw new ApiError(400, "No products provided");
+    }
+  
+    const sanitizedProducts = products.map((product, index) => {
+      const {
+        productname,
+        description,
+        availablesizes,
+        gender,
+        price,
+        stock,
+        category,
+        materials
+      } = product;
+  
+      if ([productname, gender, category, description].some(field => field?.trim() === "")) {
+        throw new ApiError(400, `Missing required fields in product at index ${index}`);
+      }
+  
+      if (price === undefined || availablesizes === undefined) {
+        throw new ApiError(400, `Price or available sizes missing in product at index ${index}`);
+      }
+  
+      return {
+        productname,
+        description,
+        availablesizes,
+        gender,
+        price,
+        stock,
+        category,
+        materials
+      };
+    });
+  
+    // Optionally filter out duplicates before inserting
+    const names = sanitizedProducts.map(p => p.productname);
+    const existingProducts = await Product.find({ productname: { $in: names } });
+    const existingNames = new Set(existingProducts.map(p => p.productname));
+  
+    const newProducts = sanitizedProducts.filter(p => !existingNames.has(p.productname));
+  
+    if (newProducts.length === 0) {
+      throw new ApiError(409, "All provided products already exist");
+    }
+  
+    const insertedProducts = await Product.insertMany(newProducts);
+  
+    return res.status(201).json(
+      new ApiResponse(201, insertedProducts, "Products successfully created")
+    );
+  });
+  
 
 const deleteProduct= asyncHandler( async (req,res)=>{
     const { productid } = req.params;
@@ -185,4 +242,4 @@ const getProductCategory= asyncHandler( async(req,res)=>{
         new ApiResponse(200, products,"Product retrived successfully !!!")
     )
 })
-export {addProduct,deleteProduct, updateProduct,getProduct, getProductGender,getProductCategory, }
+export {addProduct, addMultipleProducts, deleteProduct, updateProduct, getProduct, getProductGender, getProductCategory}
