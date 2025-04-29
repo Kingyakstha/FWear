@@ -16,18 +16,33 @@ import Filter from "../Components/Filter";
 function ShopCategory(props) {
     const [page, setPage] = useState(0);
     const [totalProduct, setTotal] = useState();
-    const [limit, setLimit] = useState(4);
+    const [limit, setLimit] = useState(8);
     const availablePages = totalProduct / limit - 1;
 
     // const product=useSelector(state=>state.shop.product)
     // console.log('all products are',product['all_product'])
     const [prod_item, setProd_item] = useState([]);
     const [limitedItems, setLimitedItems] = useState([]);
+    const [filteredItems,setFilteredItems] = useState([])
     const [savedItems, setSavedItems] = useState([]);
     const [sortClicked, setSortClicked] = useState(false);
     const [sortType, setSort] = useState();
 
     const status = useSelector((state) => state.auth.status);
+
+
+    // All the filter category and their state in array 
+    const [filterData, setFilters] = useState({
+        categoryFilter: [],
+        sizeFilter: [],
+        colorFilter: [],
+        priceFilter: [],
+    });
+
+// Receives the changes sent by child and updates the "filterData"
+    const handleFilterChange = (newFilters) => {
+        setFilters(newFilters);
+    };
 
 
 // Get all the products and their images
@@ -66,6 +81,7 @@ function ShopCategory(props) {
                 const validProduct = productWithImage.filter(
                     (items) => items !== null);
                 setProd_item(validProduct);
+                console.log("Valid product :",validProduct," product with image :",productWithImage)
             } catch (error) {
                 console.log("Error occured while fetching", error);
             }
@@ -73,15 +89,18 @@ function ShopCategory(props) {
         fetchProduct();
     }, [props]);
 
-// Get all the saved products by the user
+
+// Get all the saved products by the user and select products for paination
     useEffect(() => {
         async function fetchSavedProducts() {
             setTotal(prod_item.length);
 
             console.log("The length of prod_item:", totalProduct);
 
+// Paginated products adding in "limitedItems" "filteredItems"
             const items = prod_item.slice(page * limit, limit * (page + 1));
             setLimitedItems(items);
+            setFilteredItems(items)
             console.log("Limited items are ", limitedItems);
 
             console.log( `Status is ${status} and limited products are `, limitedItems );
@@ -100,24 +119,102 @@ function ShopCategory(props) {
         fetchSavedProducts();
     }, [page, prod_item]);
 
+    useEffect(()=>{
+        // console.log("All the limited items are  ::",limitedItems)
+        // console.log("Filtered data are ",filterData)
+
+        let categoryFilterProduct = filterData.categoryFilter.length!==0 ? filterData.categoryFilter.flatMap(category=>{        
+            return  limitedItems.map((product)=>{
+                    // console.log("category in the product",product.productname," is ",product.category,' and color is',category)
+                    if (product.category ==category) return product
+                    else return null
+                })
+            }):[]
+        let categoryFilteredItems=[...new Set(categoryFilterProduct?.filter((items)=> items !==null))]
+        // console.log("colored filter",categoryFilteredItems)
+
+
+        let colorFilterProduct = filterData.colorFilter.length!==0 ? filterData.colorFilter.flatMap(color=>{        
+            return  limitedItems.map((product)=>{
+                    let colorList=product.image.map(item=>item.color)
+                    // console.log("Color in the product",product.productname," are ",colorList,' and color is',color)
+                    if (colorList.includes(color)) return product
+                    else return null
+                })
+            }):[]
+        let colorFilteredItems=[...new Set(colorFilterProduct?.filter((items)=> items !==null))]
+        // console.log("colored filter",colorFilteredItems)
+
+        let sizeFilterProduct = filterData.sizeFilter.length !==0 ? filterData.sizeFilter.flatMap(size=>{        
+            return  limitedItems.map((product)=>{
+                    // let colorList=product.image.map(item=>item.color)
+                    // console.log("Size in the product",product.productname," are ",product.availablesizes,' and size is',size)
+                    if (product.availablesizes.includes(size)) return product
+                    else return null
+                })
+            }):[]
+            let sizeFilteredItems=[...new Set(sizeFilterProduct?.filter((items)=> items !==null))]
+            // console.log("size filter",sizeFilteredItems)
+        
+
+        // "Under $25", "$25 - $50", "$50 - $100", "Over $100"
+        const priceChart={
+            "Under $25":25, 
+            "$25 - $50":50,
+            "$50 - $100":100,
+            "Over $100":101
+        }
+
+        let priceFilterProduct = filterData.priceFilter.length !==0 ? filterData.priceFilter.flatMap(price=>{        
+            return  limitedItems.map((product)=>{
+                    // let colorList=product.image.map(item=>item.color)
+                    // console.log("Price in the product",product.productname," are ",product.price,' and price is',priceChart[price])
+                    let actualPrice=Number(product.price)- (Number(product.price)* 0.15)
+
+                    if(priceChart[price]<=100){
+                        if(priceChart[price]==25){
+                            if ( actualPrice < 25 && actualPrice > 0) return product
+                            else return null
+                        }
+                        else if(priceChart[price]==50){
+                            if ( actualPrice < 50 && actualPrice > 25) return product
+                            else return null
+                        }
+                        else{
+                            if ( actualPrice < 100 && actualPrice > 50) return product
+                            else return null
+                        }
+                    }
+                    else return product
+                })
+            }):[]
+            let priceFilteredItems=[...new Set(priceFilterProduct?.filter((items)=> items !==null))]
+            // console.log("price filter",priceFilteredItems)
+        
+
+            // let total=[...new Set([sizeFilteredItems,colorFilteredItems].flat())]
+            let total=limitedItems.filter(
+                items=>
+                    // shall be added when the dataset is changed to incorporate the categories like shirt, pant, tshirt etc
+                    // (filterData.categoryFilter.length >0?categoryFilteredItems.includes(items):true) &&  
+                    (filterData.sizeFilter.length >0?sizeFilteredItems.includes(items):true) && 
+                    (filterData.colorFilter.length >0?colorFilteredItems.includes(items):true) && 
+                    (filterData.priceFilter.length >0?priceFilteredItems.includes(items):true))
+
+            console.log('total are ',total)
+        setFilteredItems(total)
+
+    },[filterData])
+
+
+
     // const sortOptions = ["Recommended", "New", "Best Seller", "Price"];
-
-// All the filter category and their state in array 
-    const [filterData, setFilters] = useState({
-        categoryFilter: [],
-        sizeFilter: [],
-        colorFilter: [],
-        priceFilter: [],
-    });
-
-// Receives the changes sent by child and updates the "filterData"
-    const handleFilterChange = (newFilters) => {
-        setFilters(newFilters);
-    };
 
     // useEffect(()=>{
     //   console.log("Received filter data is :",filterData?.colorFilter.length !==0 && 6)
     // },[filterData])
+
+
 
     return (
         <div className="w-screen flex flex-col items-center mt-4">
@@ -271,7 +368,9 @@ function ShopCategory(props) {
 
                     <div className="w-full mt-5 flex justify-between  items-center">
                         <p>
-                            Showing {limitedItems.length} out of{" "}
+                            {/* Showing {limitedItems.length} out of{" "} */}
+                            Showing {filteredItems.length} out of{" "}
+
                             {Number(totalProduct)} products
                         </p>
                     </div>
@@ -279,8 +378,10 @@ function ShopCategory(props) {
 {/* {*******************************************************  Products  *******************************************************} */}
 
                     <div className="mt-6 flex flex-wrap justify-normal gap-x-8 gap-y-2 mx-auto px-6">
-                        {limitedItems &&
-                            limitedItems.map((items, i) => {
+                        {/* {limitedItems &&
+                            limitedItems.map((items, i) => { */}
+                        {filteredItems &&
+                            filteredItems.map((items, i) => {
                                 if (props.category === items.gender) {
                                     console.log("items is ::", items);
                                     //unique key is needed to solve the issue of haveing both page having same saved

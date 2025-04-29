@@ -515,7 +515,7 @@ function ProductDisplay({ product }) {
                         QnA.map((items) => (
                             <div
                                 key={items._id}
-                                className={`w-2/3 bg-white shadow-sm p-6 mb-4 rounded-lg border-l-2 select-none ${items.answer ? `border-green-400` : `border-gray-400`}`}
+                                className={`w-2/3  shadow-sm p-6 mb-4 rounded-lg border-l-4 select-none ${items.answer ? `border-green-500 bg-[#def7f2]` : `border-gray-500 bg-[#e9eaec]`}`}
                             >
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center justify-start ">

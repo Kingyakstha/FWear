@@ -17,6 +17,13 @@ function Filter({ filters, onFilterChange }) {
         });
         console.log("All cleared !!!");
     };
+    function upperCase(str) {
+        if (typeof str !== "string" || str.length == 0) {
+            return null;
+        } else {
+            return str.charAt(0).toUpperCase() + str.substring(1);
+        }
+    }
 
     const handleCategoryCheckbox = (e) => {
         const value = e.target.value;
@@ -166,7 +173,7 @@ function Filter({ filters, onFilterChange }) {
                     </p>
                 </div>
                 {color &&
-                    ["Black", "Blue", "Red", "White"].map((items, indx) => {
+                    ["black", "blue", "red", "white"].map((items, indx) => {
                         return (
                             <div
                                 key={items + indx}
@@ -176,9 +183,7 @@ function Filter({ filters, onFilterChange }) {
                                     type="checkbox"
                                     className="size-4"
                                     value={items}
-                                    checked={filters.colorFilter.includes(
-                                        items
-                                    )}
+                                    checked={filters.colorFilter.includes(items)}
                                     onChange={handleColorCheckbox}
                                 />
                                 <p>{items}</p>

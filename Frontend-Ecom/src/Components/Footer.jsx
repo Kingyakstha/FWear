@@ -80,7 +80,7 @@ function Footer() {
 
                     </li>
                 </ul>
-                <div className="w-3/16 flex justify-evenly mx-auto gap-6">
+                <div className="w-3/16 flex justify-start mx-4 gap-6">
                 <FaInstagram className="text-gray-200 size-7"/>
 
                 <FaSquareFacebook className="text-gray-200 size-7" />
