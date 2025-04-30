@@ -30,6 +30,7 @@ const addReview = asyncHandler( async( req,res)=>{
         $and:[{product:productid},{user:user._id}]
 
     })
+    console.log("Rating has been found",rating)
     const existedreview= await Review.findOne(
         {
             $and:[{product:productid},{user:user._id}]
@@ -139,8 +140,8 @@ const getReviews =asyncHandler(async (req,res)=>{
         {
           $lookup: {
             from: "ratings",
-            localField: "user",
-            foreignField: "user",
+            localField: "rating",
+            foreignField: "_id",
             as: "star"
           }
         },

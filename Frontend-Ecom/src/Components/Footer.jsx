@@ -49,10 +49,10 @@ function Footer() {
                     <li>
                         Offices
                         <ul className="text-left text-gray-400 text-xs mt-4 space-y-1">
-                            <li>123 Fashion Street, New York, NY 10001, USA</li>
+                            <li>123 Fashion Street, Chitwan, Ctwn 1001, Nepal</li>
                             <li>Working Hours: Mon-Fri: 9AM - 6PM</li>
                             <li>Support: +1 (555) 123-4567</li>
-                            <li>Email: support@yourstore.com</li>
+                            <li>Email: support@FWear.com</li>
                         </ul>
 
                     </li>

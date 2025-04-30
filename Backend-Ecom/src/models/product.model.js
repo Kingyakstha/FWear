@@ -41,14 +41,18 @@ const productSchema = new Schema(
             type: [String],
         },
 
-        care:{
-            type: String,
-        },
+        // care:{
+        //     type: String,
+        // },
 
         description:{
             type: String,
             required: true,
         },
+        detail:{
+            type: String,
+            required: true
+        }
 
     }
     ,{

@@ -73,7 +73,7 @@ function Items(props) {
                             "This is a short description of this model."}
                     </p>
                 }
-                <p class="font-mono ml-1"> $ {props.new_price}</p>
+                <p class="font-mono ml-1"> $ {props.new_price.toFixed(2)}</p>
             </div>
         </div>
     );

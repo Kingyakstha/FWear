@@ -4,6 +4,7 @@ const baseURL = "http://localhost:8000/api/v1/reviews";
 
 async function addReview(productid, data) {
     try {
+        console.log("review config")
         const response = await axios.post(
             `${baseURL}/add-review/${productid}`,
             data,
@@ -12,7 +13,7 @@ async function addReview(productid, data) {
             }
         );
 
-        if (response) return true;
+        if (response) return response;
         else return false;
     } catch (error) {
         console.log("Error while adding review ::", error);

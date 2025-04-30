@@ -15,7 +15,7 @@ import Filter from "../Components/Filter";
 function ShopCategory(props) {
     const [page, setPage] = useState(0);
     const [totalProduct, setTotal] = useState();
-    const [limit, setLimit] = useState(8);
+    const [limit, setLimit] = useState(24);
     const availablePages = totalProduct / limit - 1;
 
     // const product=useSelector(state=>state.shop.product)
@@ -187,7 +187,10 @@ function ShopCategory(props) {
                             else return null
                         }
                     }
-                    else return product
+                    else {
+                        if ( actualPrice > 100 ) return product
+                            else return null
+                    }
                 })
             }):[]
             let priceFilteredItems=[...new Set(priceFilterProduct?.filter((items)=> items !==null))]
@@ -433,7 +436,7 @@ function ShopCategory(props) {
 
 {/* {*******************************************************  Pagination  *******************************************************} */}
 
-            <div className="flex justify-items-center space-x-3 mt-2">
+            <div className="flex justify-items-center space-x-3 mt-4">
                 <IoIosArrowBack
                     className="rounded-lg  bg-white border-1 border-neutral-300 size-8 p-2 cursor-pointer"
                     onClick={() => {

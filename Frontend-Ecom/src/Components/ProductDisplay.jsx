@@ -23,6 +23,7 @@ import QuestionForm from "./QuestionForm";
 import { addRating } from "../appwrite/ratingConfig";
 import { addReview } from "../appwrite/reviewConfig";
 import { changeQuestion as ChangeQuestion } from "../appwrite/qnaConfig";
+import Toast from "./Toast";
 
 // import dbService from '../appwrite/config'
 // import authService from '../appwrite/auth';
@@ -51,9 +52,29 @@ function ProductDisplay({ product }) {
         green: "bg-green-400",
         yellow: "bg-yellow-400",
         purple: "bg-purple-400",
-        emerald: "bg-emerald-400",
         pink: "bg-pink-400",
         black: "bg-black",
+        brown:"bg-[#644903]",
+        golden:"bg-[#dba40c]",
+        coffee:"bg-[#AF8D61]",
+        greenish:"bg-[#91AA2D]",
+        cyanish_green:"bg-[#C7DAB9]",
+        cream:"bg-[#FCECB3]",
+        redwine:"bg-[#82030F",
+        orange:"bg-orange-400",
+        light_blue: "bg-[#37b5e3]",
+        light_green :"bg-[#3fe8b6]",
+        light_red : "bg-[#e88282]",
+        light_orange : "bg-[#f89668]",
+        light_cyan:"bg-[#acfffc]",
+        light_purple:"bg-[#B7C9E2]",
+        light_brownish_green:"bg-[#645918]",
+        dark_brownish_green:"bg-[#3d3403]",
+        dark_blue :"bg-[#010756]",
+        dark_green : "bg-[#01560c]",
+        dark_red:"bg-[#8f0404]",
+        dark_brown:"bg-[#412e1d]",
+        dark_cyan:"bg-[#00B3B3"
         // Add any other allowed colors here
     };
 
@@ -137,6 +158,9 @@ function ProductDisplay({ product }) {
     const [questionForm, setQuestionForm] = useState(false);
 
     const [QRadded, setQR] = useState(false);
+    const [questionAdded, setQuestionAdded]= useState(false)
+    const [reviewAdded, setReviewAdded]= useState(false)
+    const [questionRemoved, setQuestionRemoved]= useState(false)
     const [changeQuestion, setChangeQuestion] = useState(null);
     const [questionText, setQuestionText] = useState();
 
@@ -146,11 +170,15 @@ function ProductDisplay({ product }) {
                 const reviews = await getReview(product._id);
                 const qna = await getQnas(product._id);
                 if (qna) setQna(qna);
-                if (reviews) setReviews(reviews);
-                let star = 0;
-                reviews.map((items) => (star += items.star));
-                let avgStar = star / reviews.length;
-                setStars(avgStar);
+                if (reviews) {
+                    console.log("Got the reviews")
+                    setReviews(reviews);
+                    let star = 0;
+                    reviews.map((items) => (star += items.star));
+                    let avgStar = star / reviews.length;
+                    setStars(avgStar);
+                }
+                
             } catch (error) {
                 console.log("Error while fetching ", error);
             }
@@ -160,6 +188,7 @@ function ProductDisplay({ product }) {
     }, [QRadded, changeQuestion]);
 
     async function handleQuestionSubmit(e) {
+
         console.log("Question Submit", e.text);
         try {
             const response = await addQuestion(product._id, {
@@ -168,6 +197,7 @@ function ProductDisplay({ product }) {
             if (response) {
                 console.log("Success");
                 setQR((prev) => !prev);
+                setQuestionAdded(true)
             }
         } catch (error) {
             console.log("Error while adding question", error);
@@ -181,12 +211,15 @@ function ProductDisplay({ product }) {
                 stars: Number(e.rating),
             });
             if (addStar) {
+                console.log("Review is about to be added")
                 const response = await addReview(product._id, {
                     review: e.text,
                 });
+                console.log("response is",response)
                 if (response) {
                     console.log("Success");
                     setQR((prev) => !prev);
+                    setReviewAdded(true)
                 }
             }
         } catch (error) {
@@ -290,7 +323,7 @@ function ProductDisplay({ product }) {
                                 $ {product.price}
                             </p>
                             <p className=" text-2xl text-red-500 font-semibold">
-                                $ {product.price - 0.15 * product.price}
+                                $ {(product.price - 0.15 * product.price).toFixed(2)}
                             </p>
                         </div>
                     </div>
@@ -314,22 +347,22 @@ function ProductDisplay({ product }) {
                         </p>
                     </div>
 
-                    <div className="mt-8 flex items-end gap-28">
+                    <div className="mt-8 flex items-start ">
                         {console.log("Colors are :", product.image[0].color)}
-                        <p className="">
+                        <p className="w-3/5 pr-5 ">
                             Color:{" "}
                             {product.image.map((items, indx) =>
                                 indx == 0 ? items.color : ", " + items.color
                             )}
                         </p>
-                        <p className="">Material: {product.materials}</p>
+                        <p className="w-2/5 ">Material: {product.materials}</p>
                     </div>
 
                     <div className="flex gap-2 mt-2 mb-10">
                         {[...Array(product.image.length)].map((_, index) => (
                             <div
                                 key={index}
-                                className={`size-7 rounded-full focus:border-2 focus:border-gray-300 cursor-pointer ${colorClasses[product.image[index].color]} ${currentColor == index ? "border-2 border-gray-600" : ""}`}
+                                className={`size-7 rounded-full  shadow-3xl cursor-pointer ${colorClasses[product.image[index].color]} ${currentColor == index ? "border-2 border-gray-600" : ""}`}
                                 onClick={() => {
                                     setCurrentImage(
                                         product.image[index].image[0]
@@ -343,10 +376,10 @@ function ProductDisplay({ product }) {
 {/* {****************************  Selecting Size  ****************************} */}
 
                     <p className="font-semibold text-lg">Select Size</p>
-                    <ul className="flex gap-4 mt-6 text-center">
+                    <ul className="flex gap-4 mt-6 text-center select-none">
                         {product.availablesizes.includes("XS") && (
                             <li
-                                onClick={() => setSize("XS")}
+                                onClick={() => size==="XS"?setSize(""):setSize("XS")}
                                 className={`${size === "XS" ? "bg-red-400 text-white rounded-lg " : "bg-slate-100"} size-12 place-content-center cursor-pointer`}
                             >
                                 XS
@@ -354,7 +387,7 @@ function ProductDisplay({ product }) {
                         )}
                         {product.availablesizes.includes("S") && (
                             <li
-                                onClick={() => setSize("S")}
+                                onClick={() => size==="S"?setSize(""):setSize("S")}
                                 className={`${size === "S" ? "bg-red-400 text-white rounded-lg" : "bg-slate-100"} size-12  place-content-center cursor-pointer`}
                             >
                                 S
@@ -362,7 +395,7 @@ function ProductDisplay({ product }) {
                         )}
                         {product.availablesizes.includes("M") && (
                             <li
-                                onClick={() => setSize("M")}
+                                onClick={() => size==="M"?setSize(""):setSize("M")}
                                 className={`${size === "M" ? "bg-red-400 text-white rounded-lg " : "bg-slate-100"} size-12 place-content-center cursor-pointer`}
                             >
                                 M
@@ -370,7 +403,7 @@ function ProductDisplay({ product }) {
                         )}
                         {product.availablesizes.includes("L") && (
                             <li
-                                onClick={() => setSize("L")}
+                                onClick={() => size==="L"?setSize(""):setSize("L")}
                                 className={`${size === "L" ? "bg-red-400 text-white rounded-lg " : "bg-slate-100"} size-12 place-content-center cursor-pointer`}
                             >
                                 L
@@ -378,7 +411,7 @@ function ProductDisplay({ product }) {
                         )}
                         {product.availablesizes.includes("XL") && (
                             <li
-                                onClick={() => setSize("XL")}
+                                onClick={() => size==="XL"?setSize(""):setSize("XL")}
                                 className={`${size === "XL" ? "bg-red-400 text-white rounded-lg " : "bg-slate-100"} size-12 place-content-center cursor-pointer`}
                             >
                                 XL
@@ -386,7 +419,7 @@ function ProductDisplay({ product }) {
                         )}
                         {product.availablesizes.includes("XXL") && (
                             <li
-                                onClick={() => setSize("XXL")}
+                                onClick={() => size==="XXL"?setSize(""):setSize("XXL")}
                                 className={`${size === "XXL" ? "bg-red-400 text-white rounded-lg " : "bg-slate-100"} size-12 place-content-center cursor-pointer`}
                             >
                                 XXL
@@ -437,11 +470,11 @@ function ProductDisplay({ product }) {
                         <ul className="mt-10 font-mono space-y-4 cursor-pointer">
                             <li className="" onClick={() => detailClick()}>
                                 <div className="flex justify-between">
-                                    <p>Details</p>{" "}
+                                    <p className="text-lg">Details</p>{" "}
                                     {detailClicked ? <p>-</p> : <p>+</p>}
                                 </div>
                                 {detailClicked ? (
-                                    <p className="mt-3 ml-2 text-sm">
+                                    product.detail?(<p className="mt-3 ml-2 text-sm">{product.detail}</p>):(<p className="mt-3 ml-2 text-sm">
                                         A hoodie is a versatile, cozy piece of
                                         clothing designed with a hood and
                                         typically a kangaroo pocket. Crafted
@@ -449,7 +482,7 @@ function ProductDisplay({ product }) {
                                         it’s ideal for staying warm, casual
                                         outings, or athletic activities,
                                         blending comfort with effortless style.
-                                    </p>
+                                    </p>)
                                 ) : (
                                     ""
                                 )}
@@ -457,7 +490,7 @@ function ProductDisplay({ product }) {
 
                             <li className="" onClick={() => careClick()}>
                                 <div className="flex justify-between">
-                                    <p>Care & Instructions</p>{" "}
+                                    <p className="text-lg">Care & Instructions</p>{" "}
                                     {careClicked ? <p>-</p> : <p>+</p>}
                                 </div>
                                 {careClicked ? (
@@ -472,14 +505,14 @@ function ProductDisplay({ product }) {
 
                             <li className="" onClick={() => shippingClick()}>
                                 <div className="flex justify-between">
-                                    <p>Shipping & Returns</p>{" "}
+                                    <p className="text-lg">Shipping & Returns</p>{" "}
                                     {shippingClicked ? <p>-</p> : <p>+</p>}
                                 </div>
                                 {shippingClicked ? (
                                     <p className="mt-3 ml-2 text-sm">
                                         Shipping inside the valley is free.
                                         Shipping outside the valley cost extra
-                                        charge of Rs. 200
+                                        charge of $ 1.99
                                     </p>
                                 ) : (
                                     ""
@@ -560,11 +593,13 @@ function ProductDisplay({ product }) {
                                                 />
                                                 <MdDelete
                                                     className="size-5 cursor-pointer"
-                                                    onClick={() =>
+                                                    onClick={() =>{
+                                                        setQuestionRemoved(true)
                                                         deleteQuestion(
                                                             items._id,
                                                             items.name
                                                         )
+                                                        }
                                                     }
                                                 />
                                             </div>
@@ -634,7 +669,6 @@ function ProductDisplay({ product }) {
                         <p className="text-xl">Overall rating</p>
                         <div className="flex gap-1 items-center ">
                             <p className="text-2xl font-extrabold mr-4">
-                                {" "}
                                 {stars || 0}
                             </p>
                             {[...Array(5)].map((_) => (
@@ -751,6 +785,24 @@ function ProductDisplay({ product }) {
                     <hr className="w-full mt-2 "></hr>
                 </div>
             </div>
+            {questionAdded &&(
+                <Toast
+                message="Question added successfully !!!"
+                onClose={() => setQuestionAdded(false)} 
+                />) }
+            { questionRemoved &&
+                (<Toast
+                message=" Question removed successfully !!!"
+                onClose={() => setQuestionRemoved(false)} 
+                />) 
+            }
+            { reviewAdded &&
+                (<Toast
+                message=" Review added successfylly"
+                onClose={() => setReviewAdded(false)} 
+                />) 
+
+            }
         </div>
     );
 }

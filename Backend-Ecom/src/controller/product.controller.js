@@ -6,10 +6,10 @@ import mongoose from 'mongoose'
 // import { uploadOnCloudinary } from "../utils/cloudinary.js"; 
 
 const addProduct= asyncHandler( async (req, res)=>{
-    const {productname, description,availablesizes, gender, price, stock, category, materials}= req.body
+    const {productname, description,detail,availablesizes, gender, price, stock, category, materials}= req.body
 
     console.log("available size",availablesizes)
-    if ([productname, gender, category, description].some((field)=>field?.trim()==="")){
+    if ([productname, gender, category, description,detail].some((field)=>field?.trim()==="")){
         throw new ApiError(400,"All fields are required")
     }
     if(!price & !availablesizes){
@@ -25,6 +25,7 @@ const addProduct= asyncHandler( async (req, res)=>{
         {
             productname, 
             description,
+            detail,
             availablesizes,
             gender, 
             price,
@@ -54,6 +55,7 @@ const addMultipleProducts = asyncHandler(async (req, res) => {
       const {
         productname,
         description,
+        detail,
         availablesizes,
         gender,
         price,
@@ -62,7 +64,7 @@ const addMultipleProducts = asyncHandler(async (req, res) => {
         materials
       } = product;
   
-      if ([productname, gender, category, description].some(field => field?.trim() === "")) {
+      if ([productname, gender, category, description,detail].some(field => field?.trim() === "")) {
         throw new ApiError(400, `Missing required fields in product at index ${index}`);
       }
   
@@ -73,6 +75,7 @@ const addMultipleProducts = asyncHandler(async (req, res) => {
       return {
         productname,
         description,
+        detail,
         availablesizes,
         gender,
         price,
