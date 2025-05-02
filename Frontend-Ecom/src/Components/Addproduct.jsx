@@ -11,7 +11,7 @@ function Addproduct() {
     const [preview, setPreview] = useState(null);
     const uploadfile = (event) => {
         // dbService.uploadFile(file)
-        console.log("hi");
+        // console.log("hi");
         // console.log(event.target.files[0])
 
         const selectedFile = event.target.files[0];
@@ -31,7 +31,7 @@ function Addproduct() {
 
     const addproduct = async (data) => {
         // dbService.uploadFile()
-        console.log("hi");
+        // console.log("hi");
         const reff = await dbService.uploadFile(data.file[0]);
         if (reff) {
             const image = reff.$id;
@@ -40,7 +40,7 @@ function Addproduct() {
             data.New_price = Number(data.New_price);
             data.Image = image;
             const post = await dbService.addProduct({ ...data });
-            console.log("added ", post);
+            // console.log("added ", post);
             if (post) navigate("/");
         }
     };

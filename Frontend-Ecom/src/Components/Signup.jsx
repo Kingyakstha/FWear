@@ -25,12 +25,12 @@ function Signup() {
             setSelectedImage(file);
             setImg(true);
         }
-        console.log("hi there", image);
+        // console.log("hi there", image);
     };
 
     const handleClick = () => {
         fileInputRef.current.click();
-        console.log("hello ji", image);
+        // console.log("hello ji", image);
     };
     const toggle = () => {
         setToggleicon((prev) => !prev);
@@ -39,7 +39,7 @@ function Signup() {
     const { register, handleSubmit } = useForm();
 
     const signup = async (data) => {
-        console.log("the data is ", data);
+        // console.log("the data is ", data);
         if (!selectedImage) {
             console.log("image not selected");
             return;

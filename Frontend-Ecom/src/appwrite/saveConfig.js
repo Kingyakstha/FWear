@@ -28,7 +28,7 @@ async function unsaveProduct(productid) {
             }
         );
         if (response) {
-            console.log("response after unsaving", response);
+            // console.log("response after unsaving", response);
             return true;
         } else return false;
     } catch (error) {

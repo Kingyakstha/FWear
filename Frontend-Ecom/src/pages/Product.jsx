@@ -8,7 +8,7 @@ function Product() {
     // const all_product=useSelector((state)=>state.shop.product["all_product"])
     const [product, setProduct] = useState();
     const { id } = useParams();
-    console.log("ID is ", id);
+    // console.log("ID is ", id);
 
     useEffect(() => {
         async function fetchProduct() {

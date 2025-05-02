@@ -10,13 +10,13 @@ import { getCurrentUser } from "./appwrite/authentication";
 function App() {
     const dispatch = useDispatch();
     useEffect(() => {
-        dispatch(removeFromCart("666"));
+        dispatch(removeFromCart("Striped Flutter Sleeve Overlap Collar Peplum Hem Blouse","S"));
     });
     useEffect(() => {
-        console.log("inside the app");
+        // console.log("inside the app");
         async function fetchUser() {
             const userAuth = await getCurrentUser();
-            console.log("user auth is ", userAuth);
+            // console.log("user auth is ", userAuth);
             if (userAuth) {
                 dispatch(authLogin());
             }

@@ -46,7 +46,7 @@ export const shopSlice = createSlice({
                     cart.name !== action.payload.name &&
                     cart.size !== action.payload.size
             );
-            console.log("payload has ", action.payload);
+            // console.log("payload has ", action.payload);
         },
     },
 });

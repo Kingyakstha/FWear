@@ -57,7 +57,7 @@ async function getGenderBasedProduct(gender) {
             `${baseURL}/get-product-gender/${gender}`
         );
         if (response) {
-            console.log("response from the pc is ", response.data.data);
+            // console.log("response from the pc is ", response.data.data);
             return response.data.data;
         } else return null;
     } catch (error) {

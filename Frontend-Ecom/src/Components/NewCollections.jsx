@@ -17,15 +17,14 @@ function NewCollections() {
 
                 if (menProduct && womenProduct && kidsProduct){
                     let products=[menProduct,womenProduct,kidsProduct].flat()
-                    console.log("all the products are ",products)
+                    // console.log("all the products are ",products)
 
                     const productWithImage = await Promise.all(
                         products.map(async (prod) => {
                             try {
                                 const response = await getImages(prod._id);
-                                console.log( "Response for the image is ", response[0].color );
                                 //correction needed (done)
-                                if (response) {
+                                if (response[0].color) {
                                     const image = response[0].color;
                                     if (image) {
                                         return {
@@ -44,7 +43,7 @@ function NewCollections() {
                     );
 
                     const validProduct = productWithImage.filter((items) => items !== null);
-                    console.log("all the valid products are ",validProduct)
+                    // console.log("all the valid products are ",validProduct)
                     const shuffled =validProduct.sort(() => 0.5 - Math.random());
                     setProduct(shuffled.length<8?shuffled.slice(0,shuffled.length):shuffled.slice(0,8));
                 }

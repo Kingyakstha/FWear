@@ -4,7 +4,7 @@ import { IoIosArrowForward } from "react-icons/io";
 
 function Breadcrum(props) {
     const { product } = props;
-    console.log(product);
+    // console.log(product);
     return (
         <div className="flex items-center gap-1 mt-10 ">
             HOME <IoIosArrowForward /> <Link to="/">SHOP </Link>

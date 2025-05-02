@@ -15,9 +15,8 @@ function Popular() {
                     products.map(async (prod) => {
                         try {
                             const response = await getImages(prod._id);
-                            console.log( "Response for the image is ", response[0].color );
                             //correction needed (done)
-                            if (response) {
+                            if (response[0].color) {
                                 const image = response[0].color;
                                 if (image) {
                                     return {
@@ -46,7 +45,7 @@ function Popular() {
         fetchProduct();
     }, []);
 
-    console.log("product",product)
+    // console.log("product",product)
     return (
         <div className="w-screen flex flex-col items-center gap-2 ">
             <h1 className="text-[#171717] text-2xl font-mono">

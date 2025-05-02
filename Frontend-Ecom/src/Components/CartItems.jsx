@@ -12,7 +12,7 @@ function CartItems() {
 
     const removeItem = async (id, productname, size) => {
         try {
-            console.log("Removing item with ID:", id);
+            // console.log("Removing item with ID:", id);
             const item = await removefromCart(id);
             // const item= await axios.post(`http://localhost:8000/api/v1/carts/remove-cart/${id}`)
             if (item) {
@@ -40,7 +40,7 @@ function CartItems() {
                 if (cartItems) {
                     console.log(
                         "Fetched cart items:",
-                        cartItems[0].images[0].imageurl
+                        // cartItems[0].images[0].imageurl
                     );
                     setAllItem(cartItems);
                 }
@@ -65,7 +65,7 @@ function CartItems() {
         calculateSubtotal();
     }, [all_item]);
 
-    console.log("all the items are", all_item);
+    // console.log("all the items are", all_item);
     return (
         <div className="w-screen mt-14">
             <div key={nanoid()} className="w-4/5 justify-self-center">

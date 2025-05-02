@@ -8,7 +8,7 @@ async function userLogin(data) {
             withCredentials: true,
         });
         if (response) {
-            console.log("Successfully logged in ", response.data.data?.user);
+            // console.log("Successfully logged in ", response.data.data?.user);
             return response;
         } else return null;
     } catch (error) {
@@ -28,7 +28,7 @@ async function userSignin(formData) {
             }
         );
         if (response) {
-            console.log("Successfully signed in ", response);
+            // console.log("Successfully signed in ", response);
             return response;
         } else return null;
     } catch (error) {
@@ -42,7 +42,7 @@ async function userLogout() {
             withCredentials: true,
         });
         if (response) {
-            console.log("Successfully logged out ", response);
+            // console.log("Successfully logged out ", response);
             return response;
         } else return null;
     } catch (error) {
@@ -56,7 +56,7 @@ async function getCurrentUser() {
             withCredentials: true,
         });
         if (response) {
-            console.log("Successfully obtained current user ", response);
+            // console.log("Successfully obtained current user ", response);
             return response.data.data;
         } else return null;
     } catch (error) {
@@ -71,7 +71,7 @@ async function changePassword(data) {
         });
 
         if (response) {
-            console.log("Successfully changed password ", response);
+            // console.log("Successfully changed password ", response);
             return true;
         } else return false;
     } catch (error) {
@@ -90,7 +90,7 @@ async function changeAvatar(formData) {
         );
 
         if (response) {
-            console.log("Successfully changed password ", response);
+            // console.log("Successfully changed password ", response);
             return true;
         } else return false;
     } catch (error) {

@@ -57,7 +57,8 @@ function Items(props) {
 
             {/* Product Details */}
 
-            <div className="flex flex-col mt-2 mb-4 justify-between">
+            <div className="flex flex-col mt-2 mb-4 h-32 justify-between ">
+                <div>
                 <div className="w-full flex text-left mx-2 my-0">
                     <p className="w-5/6 font-mono font-extrabold text-lg">
                         {upperCase(props.name) || "The model"}
@@ -67,13 +68,13 @@ function Items(props) {
                         onClick={() => saveThis()}
                     />
                 </div>
-                {
-                    <p className="text-gray-600 text-sm px-1 py-1">
-                        {props?.description?.split(/(?<=[.!?])\s/)[0] ||
-                            "This is a short description of this model."}
-                    </p>
-                }
-                <p class="font-mono ml-1"> $ {props.new_price.toFixed(2)}</p>
+                <p className="text-gray-600 text-sm px-1 py-1">
+                    {props?.description?.split(/(?<=[.!?])\s/)[0] ||
+                        "This is a short description of this model."}
+                </p>
+                </div>
+         
+                <p class="font-mono ml-1 self-baseline"> $ {props.new_price.toFixed(2)}</p>
             </div>
         </div>
     );

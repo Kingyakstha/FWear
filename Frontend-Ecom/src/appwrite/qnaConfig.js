@@ -43,7 +43,7 @@ async function changeQuestion(questionid, data) {
                 withCredentials: true,
             }
         );
-        console.log(response);
+        // console.log(response);
         if (response) {
             console.log("editing question", response, "id", questionid);
             return true;

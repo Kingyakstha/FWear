@@ -37,7 +37,7 @@ function ProductDisplay({ product }) {
     const [currentImage, setCurrentImage] = useState(product.image[0].image[0]);
     const [currentColor, setCurrentColor] = useState(0);
 
-    console.log("Props value is ", product);
+    // console.log("Props value is ", product);
     function upperCase(str) {
         if (typeof str !== "string" || str.length == 0) {
             return null;
@@ -94,7 +94,7 @@ function ProductDisplay({ product }) {
                 if (!user) {
                     console.log("User not found");
                 } else {
-                    console.log("User ::", user);
+                    // console.log("User ::", user);
                     setUserName(user);
                 }
             } catch (error) {
@@ -108,16 +108,17 @@ function ProductDisplay({ product }) {
         try {
             if (!currentUserName) {
                 console.log("Please login");
+                alert("Please login")
             } else {
                 dispatch(addToCart(item));
 
                 let cartItem = {};
                 cartItem.size = item.size;
                 cartItem.quantity = item.quantity;
-                console.log("Cart Item is :", cartItem);
+                // console.log("Cart Item is :", cartItem);
 
                 const response = await addtoCart(product._id, cartItem);
-                console.log("The response is ", response);
+                // console.log("The response is ", response);
             }
         } catch (error) {
             console.log("Add to cart error ", error);
@@ -189,7 +190,7 @@ function ProductDisplay({ product }) {
 
     async function handleQuestionSubmit(e) {
 
-        console.log("Question Submit", e.text);
+        // console.log("Question Submit", e.text);
         try {
             const response = await addQuestion(product._id, {
                 question: e.text,
@@ -205,7 +206,7 @@ function ProductDisplay({ product }) {
     }
 
     async function handleReviewSubmit(e) {
-        console.log("Review Submit", e.text);
+        // console.log("Review Submit", e.text);
         try {
             const addStar = await addRating(product._id, {
                 stars: Number(e.rating),
@@ -215,7 +216,7 @@ function ProductDisplay({ product }) {
                 const response = await addReview(product._id, {
                     review: e.text,
                 });
-                console.log("response is",response)
+                // console.log("response is",response)
                 if (response) {
                     console.log("Success");
                     setQR((prev) => !prev);
@@ -228,7 +229,7 @@ function ProductDisplay({ product }) {
     }
 
     const handleQuestionEdit = (questionid, prevText, name) => {
-        console.log("question id is", questionid);
+        // console.log("question id is", questionid);
         if (currentUserName.fullname == name) {
             setChangeQuestion(questionid);
             setQuestionText(prevText);
@@ -240,7 +241,7 @@ function ProductDisplay({ product }) {
     };
 
     async function handleQuestionChange() {
-        console.log("Question text is ", questionText);
+        // console.log("Question text is ", questionText);
         try {
             const changeQ = await ChangeQuestion(changeQuestion, questionText);
             if (changeQ) {
@@ -348,11 +349,11 @@ function ProductDisplay({ product }) {
                     </div>
 
                     <div className="mt-8 flex items-start ">
-                        {console.log("Colors are :", product.image[0].color)}
+                        {/* {console.log("Colors are :", product.image[0].color)} */}
                         <p className="w-3/5 pr-5 ">
                             Color:{" "}
                             {product.image.map((items, indx) =>
-                                indx == 0 ? items.color : ", " + items.color
+                                indx == 0 ? items.color.replace(/_/g," ") : ", " + items.color.replace(/_/g," ")
                             )}
                         </p>
                         <p className="w-2/5 ">Material: {product.materials}</p>

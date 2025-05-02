@@ -17,6 +17,7 @@ function Filter({ filters, onFilterChange }) {
         });
         console.log("All cleared !!!");
     };
+
     function upperCase(str) {
         if (typeof str !== "string" || str.length == 0) {
             return null;
@@ -85,7 +86,7 @@ function Filter({ filters, onFilterChange }) {
                     <p
                         onClick={() => {
                             setCategory((prev) => !prev);
-                            console.log("Hi", category);
+                            // console.log("Hi", category);
                         }}
                         className="cursor-pointer"
                     >
@@ -98,7 +99,7 @@ function Filter({ filters, onFilterChange }) {
                     </p>
                 </div>
                 {category &&
-                    ["Shirt", "Pants", "Dress", "Jackets"].map(
+                    ["Shirts", "Sweaters", "Jeans", "T-Shirts","Jackets"].map(
                         (items, indx) => {
                             return (
                                 <div
@@ -138,7 +139,7 @@ function Filter({ filters, onFilterChange }) {
                     </p>
                 </div>
                 {size &&
-                    ["XS", "S", "L", "XL"].map((items, indx) => {
+                    ["XS", "S","M", "L", "XL","XXL"].map((items, indx) => {
                         return (
                             <div
                                 key={items + indx}
