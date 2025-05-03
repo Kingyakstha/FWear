@@ -1,6 +1,6 @@
 import axios from "axios";
+const baseURL = import.meta.env.VITE_BASE_URL+"/products";
 
-const baseURL = "http://localhost:8000/api/v1/products";
 
 async function addProduct(data) {
     try {

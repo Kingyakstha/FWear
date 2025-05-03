@@ -1,6 +1,5 @@
 import axios from "axios";
-
-const baseURL = "http://localhost:8000/api/v1/reviews";
+const baseURL = import.meta.env.VITE_BASE_URL+"/reviews";
 
 async function addReview(productid, data) {
     try {

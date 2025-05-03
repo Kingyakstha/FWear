@@ -336,8 +336,8 @@ function ProductDisplay({ product }) {
                         <FiStar className="size-5 text-red-400" />
                         <FiStar className="size-5 text-red-400" /> */}
                         { [...Array(5)].map((_,indx)=>{
-                                if (indx<stars) return <AiFillStar className="size-5 text-red-400" />
-                                else return <AiOutlineStar className="size-5 text-red-400" />
+                                if (indx<stars) return <AiFillStar key={indx} className="size-5 text-red-400" />
+                                else return <AiOutlineStar key={indx} className="size-5 text-red-400" />
                         })}
 {/*                         
                         <p className="text-lg text-gray-600 mr-3">
@@ -672,8 +672,8 @@ function ProductDisplay({ product }) {
                             <p className="text-2xl font-extrabold mr-4">
                                 {stars || 0}
                             </p>
-                            {[...Array(5)].map((_) => (
-                                <FaStar className=" size-6 text-yellow-400" />
+                            {[...Array(5)].map((_,indx) => (
+                                <FaStar key={indx} className=" size-6 text-yellow-400" />
                             ))}
                             <p className="text-gray-300 text-xs ml-2">
                                 {Reviews?.length} reviews

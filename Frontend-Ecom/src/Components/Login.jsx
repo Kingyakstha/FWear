@@ -85,7 +85,7 @@ function Login() {
                         Login
                     </button>
                 </form>
-                <p onClick={userLogout}>
+                <p >
                     Don't have an account?{" "}
                     <Link to="/signup">
                         <span className="text-red-500">Signup</span>

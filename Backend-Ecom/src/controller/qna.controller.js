@@ -75,7 +75,7 @@ const changeQuestion=asyncHandler(async(req,res)=>{
     const {questionid}=req.params 
     const {question} =req.body
 
-    console.log("question in body is ",question)
+    // console.log("question in body is ",question)
 
     if (!questionid) {
         throw new ApiError(401, "Question ID is required");

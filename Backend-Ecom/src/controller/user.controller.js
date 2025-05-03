@@ -100,7 +100,7 @@ const registerUser= asyncHandler(async(req,res)=>{
 
 const loginUser= asyncHandler ( async (req,res)=>{
     const {email, password}=req.body
-    console.log(`email  ${email} and password  ${password} \n` ,req.body)
+    // console.log(`email  ${email} and password  ${password} \n` ,req.body)
     if(!email || !password)
     {
         throw new ApiError(400,"Enter email and password")

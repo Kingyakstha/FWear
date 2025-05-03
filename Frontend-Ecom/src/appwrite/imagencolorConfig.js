@@ -1,6 +1,6 @@
 import axios from "axios";
+const baseURL = import.meta.env.VITE_BASE_URL+"/images";
 
-const baseURL = "http://localhost:8000/api/v1/images";
 
 async function addImages(productid, formData) {
     try {

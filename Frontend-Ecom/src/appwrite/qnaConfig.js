@@ -1,6 +1,6 @@
 import axios from "axios";
+const baseURL = import.meta.env.VITE_BASE_URL+"/qnas";
 
-const baseURL = "http://localhost:8000/api/v1/qnas";
 
 async function addQuestion(productid, data) {
     try {
