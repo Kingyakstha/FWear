@@ -6,12 +6,13 @@ import {User} from "../models/user.model.js";
 export const verifyJWT=asyncHandler(async(req,_,next)=>{
     console.log("THe header are ",req.headers," cookies ",req?.cookies," or cookie",req?.cookie)
     try {
-        const token= req.cookies?.accessToken || req.header("Authorization")?.replace("Bearer ","")
-      
-        console.log("token ", req.cookies)
-        if(!token)
-        {
-            throw new ApiError(401,"Unauthorized request")
+        // Get token from cookies or Authorization header
+        const token = req.cookies?.accessToken || 
+                     req.headers?.cookie?.split(';')?.find(c => c.trim().startsWith('accessToken='))?.split('=')[1] ||
+                     req.header("Authorization")?.replace("Bearer ", "");
+
+        if (!token) {
+            throw new ApiError(401, "Unauthorized request");
         }
     
         const decodedToken=jwt.verify(token,process.env.ACCESS_TOKEN_SECRET)
