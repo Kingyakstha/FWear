@@ -2,27 +2,32 @@ import axios from "axios";
 const baseURL = import.meta.env.VITE_BASE_URL;
 // console.log(baseURL)
 
+// Configure axios defaults
+axios.defaults.withCredentials = true;
+
 async function userLogin(data) {
     try {
-        const response = await axios.post(`${baseURL}/users/login`, data, {
-            withCredentials: true,
-        });
-        if (response) {
-            // console.log("Successfully logged in ", response.data.data?.user);
-            return response;
-        } else return null;
+        console.log("Attempting login to:", `${baseURL}/users/login`);
+        const response = await axios.post(`${baseURL}/users/login`, data);
+        console.log("Login response:", response);
+        return response;
     } catch (error) {
-        console.log("Error occured while logging in ::", error);
+        console.error("Login error details:", {
+            message: error.message,
+            response: error.response?.data,
+            status: error.response?.status
+        });
+        throw error;
     }
 }
 
 async function userSignin(formData) {
     try {
+        console.log("Attempting signup to:", `${baseURL}/users/register`);
         const response = await axios.post(
             `${baseURL}/users/register`,
             formData,
             {
-                withCredentials:true,
                 headers: {
                     "Content-Type": "multipart/form-data",
                 },
@@ -33,21 +38,28 @@ async function userSignin(formData) {
             return response;
         } else return null;
     } catch (error) {
-        console.log("Error occured while signing in ::", error);
+        console.error("Signup error details:", {
+            message: error.message,
+            response: error.response?.data,
+            status: error.response?.status
+        });
+        throw error;
     }
 }
 
 async function userLogout() {
     try {
-        const response = await axios.get(`${baseURL}/users/logout`, {
-            withCredentials: true,
-        });
-        if (response) {
-            // console.log("Successfully logged out ", response);
-            return response;
-        } else return null;
+        console.log("Attempting logout to:", `${baseURL}/users/logout`);
+        const response = await axios.get(`${baseURL}/users/logout`);
+        console.log("Logout response:", response);
+        return response;
     } catch (error) {
-        console.log("Error occured while logging out ::", error);
+        console.error("Logout error details:", {
+            message: error.message,
+            response: error.response?.data,
+            status: error.response?.status
+        });
+        throw error;
     }
 }
 

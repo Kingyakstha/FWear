@@ -4,12 +4,36 @@ import jwt from "jsonwebtoken";
 import {User} from "../models/user.model.js";
 
 export const verifyJWT=asyncHandler(async(req,_,next)=>{
-    console.log("THe header are ",req.headers," cookies ",req?.cookies," or cookie",req?.cookie)
+    console.log("=== Auth Middleware Debug ===");
+    console.log("Headers:", JSON.stringify(req.headers, null, 2));
+    console.log("Cookies:", req.cookies);
+    console.log("Raw Cookie String:", req.headers.cookie);
+    
     try {
-        // Get token from cookies or Authorization header
-        const token = req.cookies?.accessToken || 
-                     req.headers?.cookie?.split(';')?.find(c => c.trim().startsWith('accessToken='))?.split('=')[1] ||
-                     req.header("Authorization")?.replace("Bearer ", "");
+        let token = null;
+        
+        // Method 1: From parsed cookies
+        if (req.cookies?.accessToken) {
+            token = req.cookies.accessToken;
+            console.log("Token found in parsed cookies");
+        }
+        
+        // Method 2: From raw cookie string
+        if (!token && req.headers.cookie) {
+            const cookies = req.headers.cookie.split(';');
+            console.log("Parsed cookie string:", cookies);
+            const accessTokenCookie = cookies.find(cookie => cookie.trim().startsWith('accessToken='));
+            if (accessTokenCookie) {
+                token = accessTokenCookie.split('=')[1];
+                console.log("Token found in raw cookie string");
+            }
+        }
+        
+        // Method 3: From Authorization header
+        if (!token && req.header("Authorization")) {
+            token = req.header("Authorization").replace("Bearer ", "");
+            console.log("Token found in Authorization header");
+        }
 
         if (!token) {
             throw new ApiError(401, "Unauthorized request");

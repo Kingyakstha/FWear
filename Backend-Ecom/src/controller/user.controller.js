@@ -96,13 +96,15 @@ const registerUser= asyncHandler(async(req,res)=>{
         const {accessToken,refreshToken} = await generateAccessAndRefreshTokens(user._id)
         
         console.log("access and refresh tokens are",accessToken,refreshToken)
-        const options={ // cookies modifiable only through server
-        httpOnly: true,
-        // secure: true    //for production where https is present 
-        secure: process.env.NODE_ENV === "production", // Use secure in production only
-        sameSite: 'lax', // add this for cross-origin control
-
-    }
+        const options = {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'none',
+            path: '/',
+            domain: process.env.NODE_ENV === 'production' 
+                ? (process.env.COOKIE_DOMAIN || '.vercel.app')  // Use custom domain or default to .vercel.app
+                : 'localhost'  // Use localhost for development
+        }
 
         return res
         .status(200)
@@ -115,7 +117,6 @@ const registerUser= asyncHandler(async(req,res)=>{
 
 const loginUser= asyncHandler ( async (req,res)=>{
     const {email, password}=req.body
-    // console.log(`email  ${email} and password  ${password} \n` ,req.body)
     if(!email || !password)
     {
         throw new ApiError(400,"Enter email and password")
@@ -136,13 +137,14 @@ const loginUser= asyncHandler ( async (req,res)=>{
 
     const loggedInUser= await User.findById(user._id).select("-password -refreshToken")
 
-    const options={ // cookies modifiable only through server
+    const options = {
         httpOnly: true,
-        // secure: true    //for production where https is present 
-        secure: process.env.NODE_ENV === "production", // Use secure in production only
-        sameSite: 'lax', // add this for cross-origin control
-
-
+        secure: true,
+        sameSite: 'none',
+        path: '/',
+        domain: process.env.NODE_ENV === 'production' 
+            ? (process.env.COOKIE_DOMAIN || '.vercel.app')  // Use custom domain or default to .vercel.app
+            : 'localhost'  // Use localhost for development
     }
 
     return res
@@ -152,7 +154,6 @@ const loginUser= asyncHandler ( async (req,res)=>{
     .json(
         new ApiResponse(200,{user:loggedInUser,accessToken,refreshToken},`User login successfully`)
     )
-
 })
 
 const logoutUser= asyncHandler( async (req, res)=>{
@@ -169,13 +170,14 @@ const logoutUser= asyncHandler( async (req, res)=>{
         }
     )
 
-    // console.log("the obtained user is ",user)
-    const options={ // cookies modifiable only through server
+    const options = {
         httpOnly: true,
-        // secure: true    //for production where https is present 
-        secure: process.env.NODE_ENV === "production" ,// Use secure in production only
-        sameSite: 'lax', // add this for cross-origin control
-
+        secure: true,
+        sameSite: 'none',
+        path: '/',
+        domain: process.env.NODE_ENV === 'production' 
+            ? (process.env.COOKIE_DOMAIN || '.vercel.app')  // Use custom domain or default to .vercel.app
+            : 'localhost'  // Use localhost for development
     }
 
     return res
@@ -185,8 +187,6 @@ const logoutUser= asyncHandler( async (req, res)=>{
     .json(
         new ApiResponse(200,{user},"User logged out successfully")
     )
-
-
 })
 
 const refreshAccessToken= asyncHandler( async (req,res)=>{
@@ -211,13 +211,16 @@ const refreshAccessToken= asyncHandler( async (req,res)=>{
          throw new ApiError(401,"refresh token is expired")
      }
  
-     const options={ // cookies modifiable only through server
+     const options = {
          httpOnly: true,
-        // secure: true    //for production where https is present 
-        secure: process.env.NODE_ENV === "production", // Use secure in production only
-        sameSite: 'lax' // add this for cross-origin control
-
+         secure: true,
+         sameSite: 'none',
+         path: '/',
+         domain: process.env.NODE_ENV === 'production' 
+             ? (process.env.COOKIE_DOMAIN || '.vercel.app')  // Use custom domain or default to .vercel.app
+             : 'localhost'  // Use localhost for development
      }
+     
      const {accessToken,newRefreshToken}=await generateAccessAndRefreshTokens(user._id)
  
      res
