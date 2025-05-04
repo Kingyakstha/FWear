@@ -101,9 +101,9 @@ const registerUser= asyncHandler(async(req,res)=>{
             secure: true,
             sameSite: 'none',
             path: '/',
-            domain: process.env.NODE_ENV === 'production' 
-                ? (process.env.COOKIE_DOMAIN || '.vercel.app')  // Use custom domain or default to .vercel.app
-                : 'localhost'  // Use localhost for development
+            // domain: process.env.NODE_ENV === 'production' 
+            //     ? (process.env.COOKIE_DOMAIN || '.vercel.app')  // Use custom domain or default to .vercel.app
+            //     : 'localhost'  // Use localhost for development
         }
 
         return res
@@ -142,9 +142,9 @@ const loginUser= asyncHandler ( async (req,res)=>{
         secure: true,
         sameSite: 'none',
         path: '/',
-        domain: process.env.NODE_ENV === 'production' 
-            ? (process.env.COOKIE_DOMAIN || '.vercel.app')  // Use custom domain or default to .vercel.app
-            : 'localhost'  // Use localhost for development
+        // domain: process.env.NODE_ENV === 'production' 
+        //     ? (process.env.COOKIE_DOMAIN || '.vercel.app')  // Use custom domain or default to .vercel.app
+        //     : 'localhost'  // Use localhost for development
     }
 
     return res
@@ -175,9 +175,9 @@ const logoutUser= asyncHandler( async (req, res)=>{
         secure: true,
         sameSite: 'none',
         path: '/',
-        domain: process.env.NODE_ENV === 'production' 
-            ? (process.env.COOKIE_DOMAIN || '.vercel.app')  // Use custom domain or default to .vercel.app
-            : 'localhost'  // Use localhost for development
+        // domain: process.env.NODE_ENV === 'production' 
+        //     ? (process.env.COOKIE_DOMAIN || '.vercel.app')  // Use custom domain or default to .vercel.app
+        //     : 'localhost'  // Use localhost for development
     }
 
     return res
@@ -216,9 +216,9 @@ const refreshAccessToken= asyncHandler( async (req,res)=>{
          secure: true,
          sameSite: 'none',
          path: '/',
-         domain: process.env.NODE_ENV === 'production' 
-             ? (process.env.COOKIE_DOMAIN || '.vercel.app')  // Use custom domain or default to .vercel.app
-             : 'localhost'  // Use localhost for development
+        //  domain: process.env.NODE_ENV === 'production' 
+        //      ? (process.env.COOKIE_DOMAIN || '.vercel.app')  // Use custom domain or default to .vercel.app
+        //      : 'localhost'  // Use localhost for development
      }
      
      const {accessToken,newRefreshToken}=await generateAccessAndRefreshTokens(user._id)
