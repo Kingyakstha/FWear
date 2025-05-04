@@ -97,7 +97,7 @@ const registerUser= asyncHandler(async(req,res)=>{
         
         console.log("access and refresh tokens are",accessToken,refreshToken)
         const options={ // cookies modifiable only through server
-        httpOnly: false,
+        httpOnly: true,
         // secure: true    //for production where https is present 
         secure: process.env.NODE_ENV === "production", // Use secure in production only
         sameSite: 'lax' // add this for cross-origin control
@@ -137,7 +137,7 @@ const loginUser= asyncHandler ( async (req,res)=>{
     const loggedInUser= await User.findById(user._id).select("-password -refreshToken")
 
     const options={ // cookies modifiable only through server
-        httpOnly: false,
+        httpOnly: true,
         // secure: true    //for production where https is present 
         secure: process.env.NODE_ENV === "production", // Use secure in production only
         sameSite: 'lax' // add this for cross-origin control
@@ -170,7 +170,7 @@ const logoutUser= asyncHandler( async (req, res)=>{
 
     // console.log("the obtained user is ",user)
     const options={ // cookies modifiable only through server
-        httpOnly: false,
+        httpOnly: true,
         // secure: true    //for production where https is present 
         secure: process.env.NODE_ENV === "production" ,// Use secure in production only
         sameSite: 'lax' // add this for cross-origin control
