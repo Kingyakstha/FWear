@@ -42,6 +42,7 @@ function Signup() {
         // console.log("the data is ", data);
         if (!selectedImage) {
             console.log("image not selected");
+            alert("Add avatar")
             return;
         }
         const formData = new FormData();

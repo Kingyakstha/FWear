@@ -84,7 +84,7 @@ const registerUser= asyncHandler(async(req,res)=>{
             username:username?.toLowerCase()
         }) 
     
-        console.log("User db :",user)
+        // console.log("User db :",user)
         //check if the user is present in db or not
         const createdUser =await User.findById(user._id).select(
             "-password -refreshToken"
@@ -92,10 +92,24 @@ const registerUser= asyncHandler(async(req,res)=>{
         if (!createdUser){
             throw new ApiError(500,"Something went wrong while registering the user")
         }
-        console.log("After user creation",createdUser)
-    
-        return res.status(201).json(
-            new ApiResponse(200,createdUser,"User registered successfully")
+        // console.log("After user creation",createdUser)
+        const {accessToken,refreshToken} = await generateAccessAndRefreshTokens(user._id)
+        
+        console.log("access and refresh tokens are",accessToken,refreshToken)
+        const options={ // cookies modifiable only through server
+        httpOnly: true,
+        // secure: true    //for production where https is present 
+        secure: process.env.NODE_ENV === "production", // Use secure in production only
+        sameSite: 'lax' // add this for cross-origin control
+
+    }
+
+        return res
+        .status(200)
+        .cookie("accessToken",accessToken,options)
+        .cookie("refreshToken",refreshToken,options)
+        .json(
+            new ApiResponse(200,{user:createdUser,accessToken,refreshToken},"User registered successfully")
         )
 })
 
@@ -141,6 +155,7 @@ const loginUser= asyncHandler ( async (req,res)=>{
 })
 
 const logoutUser= asyncHandler( async (req, res)=>{
+    console.log("Insdie loguot")
     const user= await User.findByIdAndUpdate(
         req.user._id,
         {
@@ -153,6 +168,7 @@ const logoutUser= asyncHandler( async (req, res)=>{
         }
     )
 
+    // console.log("the obtained user is ",user)
     const options={ // cookies modifiable only through server
         httpOnly: true,
         // secure: true    //for production where https is present 

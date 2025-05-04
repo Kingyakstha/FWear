@@ -22,6 +22,7 @@ async function userSignin(formData) {
             `${baseURL}/users/register`,
             formData,
             {
+                withCredentials:true,
                 headers: {
                     "Content-Type": "multipart/form-data",
                 },
