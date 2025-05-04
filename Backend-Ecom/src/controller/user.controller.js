@@ -100,7 +100,8 @@ const registerUser= asyncHandler(async(req,res)=>{
         httpOnly: true,
         // secure: true    //for production where https is present 
         secure: process.env.NODE_ENV === "production", // Use secure in production only
-        sameSite: 'lax' // add this for cross-origin control
+        sameSite: 'none', // add this for cross-origin control
+        domain:'.vercel.app'
 
     }
 
@@ -140,7 +141,8 @@ const loginUser= asyncHandler ( async (req,res)=>{
         httpOnly: true,
         // secure: true    //for production where https is present 
         secure: process.env.NODE_ENV === "production", // Use secure in production only
-        sameSite: 'lax' // add this for cross-origin control
+        sameSite: 'none', // add this for cross-origin control
+        domain:'.vercel.app'
 
     }
 
@@ -173,7 +175,8 @@ const logoutUser= asyncHandler( async (req, res)=>{
         httpOnly: true,
         // secure: true    //for production where https is present 
         secure: process.env.NODE_ENV === "production" ,// Use secure in production only
-        sameSite: 'lax' // add this for cross-origin control
+        sameSite: 'none', // add this for cross-origin control
+        domain:'.vercel.app'
 
     }
 
