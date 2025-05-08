@@ -1,25 +1,41 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 // import dbService from '../appwrite/config'
 import { FaHeart } from "react-icons/fa";
 import { saveProduct, unsaveProduct } from "../appwrite/saveConfig";
+import { useDispatch } from "react-redux";
+import { addSavedProduct, removeSavedProduct } from "../Context/productSlice";
 
 function Items(props) {
     // console.log("Key of this item is ", props);
-    const [product, setProduct] = useState(props);
-    const [save, setSave] = useState(product.saved);
+    const [product, setProduct] = useState();
+    const [save, setSave] = useState(false);
+    const dispatch=useDispatch();
+    // if (props?.saved)setSave(true);
     // console.log("saved while passing props", props.saved," name ",props.name)
+    // console.log("saved in the usestate", save,"name ", product," props ",props)
+
 
     const saveThis = async () => {
+        // console.log("inside savethi")
         if (!save) {
             setSave(true);
             const response = await saveProduct(product.id);
-            if (response) setProduct({ ...product, saved: true });
+            if (response) {
+                setProduct({ ...product, saved: true });
+                dispatch(addSavedProduct([{productid:product.id}]));
+                // console.log("saved")
+            }
             else setSave(false);
         } else {
             setSave(false);
             const response = await unsaveProduct(product.id);
-            if (response) setProduct({ ...product, saved: false });
+            if (response) {
+                setProduct({ ...product, saved: false });
+                dispatch(removeSavedProduct([product.id]));
+                // console.log("unsaved")
+
+            }
             else setSave(true);
         }
     };
@@ -31,7 +47,12 @@ function Items(props) {
             return str.charAt(0).toUpperCase() + str.substring(1);
         }
     }
-    // console.log("saved in the usestate", save,"name ", props.name)
+
+    useEffect(() => {
+        setProduct(props)
+        setSave(props.saved);
+        // console.log("saved",save,"prod ",product)
+      }, [props]);
 
     return (
         <div className="w-60  mt-4 shadow-lg rounded-2xl overflow-hidden relative select-none">

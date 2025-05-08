@@ -40,7 +40,7 @@ async function getSavedProduct() {
         const response = await axios.get(`${baseURL}/get-save`, {
             withCredentials: true,
         });
-        if (response) return response.data;
+        if (response) return response.data.data;
         else return null;
     } catch (error) {
         console.log("Error occured while getting saved product :: ", error);

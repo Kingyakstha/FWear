@@ -45,52 +45,71 @@ function ShopCategory(props) {
 
 
 // Get all the products and their images
-    useEffect(() => {
-        async function fetchProduct() {
-            setPage(0);
-            try {
-                const products = await getGenderBasedProduct(props.category);
-                // const response= await axios.get(`http://localhost:8000/api/v1/products/get-product-gender/${props.category}`)
-                const productWithImage = await Promise.all(
-                    products.map(async (prod) => {
-                        try {
-                            const response = await getImages(prod._id);
-                            // const response= await axios.get(`http://localhost:8000/api/v1/images/getImages/${prod._id}`)
-                            
-                            // console.log( "Response for the image is ", response[0].color );
-                            //correction needed (done)
-                            if (response[0].color) {
-                                const image = response[0].color;
-                                if (image) {
-                                    return {
-                                        ...prod,
-                                        // image:response.data.data[0].color[0].image[0]
-                                        image: image,
-                                    };
-                                }
-                                return null;
-                            }
-                        } catch (error) {
-                            console.log( "Error occured while fetching the images or image doesn't exist",error);
-                            return null;
-                        }
-                    })
-                );
 
-//Products which contains image/s
-                const validProduct = productWithImage.filter(
-                    (items) => items !== null);
-                setProd_item(validProduct);
-                // console.log("Valid product :",validProduct," product with image :",productWithImage)
-            } catch (error) {
-                console.log("Error occured while fetching", error);
-            }
-        }
-        fetchProduct();
-    }, [props]);
+    const item = useSelector(state=>{
+        if(props.category=="men") return state.product.menProduct;
+        else if (props.category=="women") return state.product.womenProduct;
+        else if (props.category=="kids") return state.product.kidsProduct;
+    })
+
+    // const item =useSelector((state)=> state.product.menProduct)
+    useEffect(()=>{
+        setProd_item(item);
+    },[item])
+   
+
+
+//     useEffect(() => {
+//         async function fetchProduct() {
+//             setPage(0);
+//             try {
+//                 const products = await getGenderBasedProduct(props.category);
+//                 // const response= await axios.get(`http://localhost:8000/api/v1/products/get-product-gender/${props.category}`)
+//                 const productWithImage = await Promise.all(
+//                     products.map(async (prod) => {
+//                         try {
+//                             const response = await getImages(prod._id);
+//                             // const response= await axios.get(`http://localhost:8000/api/v1/images/getImages/${prod._id}`)
+                            
+//                             // console.log( "Response for the image is ", response[0].color );
+//                             //correction needed (done)
+//                             if (response[0].color) {
+//                                 const image = response[0].color;
+//                                 if (image) {
+//                                     return {
+//                                         ...prod,
+//                                         // image:response.data.data[0].color[0].image[0]
+//                                         image: image,
+//                                     };
+//                                 }
+//                                 return null;
+//                             }
+//                         } catch (error) {
+//                             console.log( "Error occured while fetching the images or image doesn't exist",error);
+//                             return null;
+//                         }
+//                     })
+//                 );
+
+// //Products which contains image/s
+//                 const validProduct = productWithImage.filter(
+//                     (items) => items !== null);
+//                 setProd_item(validProduct);
+//                 // console.log("Valid product :",validProduct," product with image :",productWithImage)
+//             } catch (error) {
+//                 console.log("Error occured while fetching", error);
+//             }
+//         }
+//         fetchProduct();
+//     }, [props]);
 
 
 // Get all the saved products by the user and select products for paination
+    const saved= useSelector(state=>state.product.savedProduct)
+    useEffect(()=>{
+        setSavedItems(saved);
+    },[saved])
+    
     useEffect(() => {
         async function fetchSavedProducts() {
             
@@ -112,16 +131,16 @@ function ShopCategory(props) {
             // console.log("Limited items are ", filteredItems);
             // console.log( `Status is ${status} and limited products are `, filteredItems );
 
-            if (status) {
-                const saved = await getSavedProduct();
-                // console.log("saved is :", saved);
-                const savedArray = saved.data.map((items) => {
-                    return items.productid;
-                });
-                // console.log("saved array is :", savedArray);
-// Add all the id of product which is saved by user
-                setSavedItems(savedArray);
-            }
+//             if (status) {
+//                 const saved = await getSavedProduct();
+//                 console.log("saved in cat is :", saved);
+//                 const savedArray = saved.map((items) => {
+//                     return items.productid;
+//                 });
+//                 console.log("saved array is :", savedArray);
+// // Add all the id of product which is saved by user
+//                 setSavedItems(savedArray);
+//             }
         }
         fetchSavedProducts();
         // setChangePage(prev=> prev+=1);
@@ -134,7 +153,7 @@ function ShopCategory(props) {
         // console.log("Filtered data are ",filterData)
 
         let categoryFilterProduct = filterData.categoryFilter.length!==0 ? filterData.categoryFilter.flatMap(category=>{        
-            return  prod_item.map((product)=>{
+            return  prod_item?.map((product)=>{
                     // console.log("category in the product",product.productname," is ",product.category,' and color is',category)
                     if (product.category ==category) return product
                     else return null
@@ -145,7 +164,7 @@ function ShopCategory(props) {
 
 
         let colorFilterProduct = filterData.colorFilter.length!==0 ? filterData.colorFilter.flatMap(color=>{        
-            return  prod_item.map((product)=>{
+            return  prod_item?.map((product)=>{
                     let colorList=product.image.map(item=>item.color)
                     // console.log("Color in the product",product.productname," are ",colorList,' and color is',color)
                     if (colorList.includes(color)) return product
@@ -156,7 +175,7 @@ function ShopCategory(props) {
         // console.log("colored filter",colorFilteredItems)
 
         let sizeFilterProduct = filterData.sizeFilter.length !==0 ? filterData.sizeFilter.flatMap(size=>{        
-            return  prod_item.map((product)=>{
+            return  prod_item?.map((product)=>{
                     // let colorList=product.image.map(item=>item.color)
                     // console.log("Size in the product",product.productname," are ",product.availablesizes,' and size is',size)
                     if (product.availablesizes.includes(size)) return product
@@ -176,7 +195,7 @@ function ShopCategory(props) {
         }
 
         let priceFilterProduct = filterData.priceFilter.length !==0 ? filterData.priceFilter.flatMap(price=>{        
-            return  prod_item.map((product)=>{
+            return  prod_item?.map((product)=>{
                     console.log("Price in the product",product.productname," are ",product.price,' and price is',priceChart[price])
                     let actualPrice=Number(product.price)- (Number(product.price)* 0.15)
 
@@ -205,7 +224,7 @@ function ShopCategory(props) {
         
 
             // let total=[...new Set([sizeFilteredItems,colorFilteredItems].flat())]
-            let total=prod_item.filter(
+            let total=prod_item?.filter(
                 items=>
                     // shall be added when the dataset is changed to incorporate the categories like shirt, pant, tshirt etc
                     (filterData.categoryFilter.length >0?categoryFilteredItems.includes(items):true) &&  
@@ -418,7 +437,7 @@ function ShopCategory(props) {
                             filteredItems.map((items, i) => {
                                 // console.log("Prop cat ",props.category," and items is ",items)
                                 if (items && props.category === items?.gender) {
-                                    // console.log("items is ::", items);
+                                    // console.log("inside items is ::", savedItems.includes(items._id));
                                     //unique key is needed to solve the issue of haveing both page having same saved
                                     return (
                                         <Items
@@ -429,7 +448,7 @@ function ShopCategory(props) {
                                             image={items.image}
                                             new_price={ items.price - 0.15 * items.price }
                                             old_price={items.price}
-                                            saved={ savedItems.includes(items._id)? true : false }
+                                            saved={ savedItems.includes(items._id)}
                                         />
                                     );
                                 }
